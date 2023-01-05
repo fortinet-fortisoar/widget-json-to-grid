@@ -1,0 +1,17 @@
+<div class="widget widget-container chart">
+    <div class="display-flex-space-between margin-chart">
+        <div class="padding-right-0 padding-left-0 widget-dashboard-title-width"
+            data-ng-class="(page === 'dashboard' || page === 'reporting') ? 'widget-dashboard-title-width' : 'widget-title-width'">
+        </div>
+    </div>
+        <div class="pull-right"><span style="font-weight:400;font-size:0.8em">&nbsp;<i
+                                                                                       class="fa {{status.open===true? 'fa-chevron-up':'fa-chevron-down'}}"></i></span>
+        </div>
+            <div class="clearfix"></div>
+  		  <cs-spinner data-ng-show="processing" class="state-wait" data-show-background="true"></cs-spinner>
+          <div class="row" data-ng-show="!processing">
+            <div class="col-md-12">
+				<div class="grid-widget-container" data-cs-grid data-grid-options="gridOptions" data-column-defs="columnDefs"></div>
+     		</div>
+          </div>
+</div>
