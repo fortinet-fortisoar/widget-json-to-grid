@@ -3,6 +3,7 @@
     "title": "JSON to Grid",
     "subTitle": "Render the json playbook result in grid view and also perform various operation on the grid",
     "version": "1.0.0",
+    "published_date": "1658838600",
     "metadata": {
         "description": "Render the json playbook result in grid view and also perform various operation on the grid",
         "pages": [
