@@ -2,11 +2,11 @@
 (function () {
     angular
         .module('cybersponse')
-        .controller('editJsonToGrid100DevCtrl', editJsonToGrid100DevCtrl);
+        .controller('editJsonToGrid100Ctrl', editJsonToGrid100Ctrl);
 
-        editJsonToGrid100DevCtrl.$inject = ['$scope', '$resource', 'API', '$uibModalInstance', 'config', 'playbookService', 'statusCodeService', 'Field', '$filter'];
+        editJsonToGrid100Ctrl.$inject = ['$scope', '$resource', 'API', '$uibModalInstance', 'config', 'playbookService', 'statusCodeService', 'Field', '$filter'];
 
-    function editJsonToGrid100DevCtrl($scope, $resource, API, $uibModalInstance, config, playbookService, statusCodeService, Field, $filter) {
+    function editJsonToGrid100Ctrl($scope, $resource, API, $uibModalInstance, config, playbookService, statusCodeService, Field, $filter) {
         $scope.cancel = cancel;
         $scope.save = save;
         $scope.config = config;
