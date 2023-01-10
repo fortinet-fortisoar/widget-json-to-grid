@@ -28,7 +28,7 @@
                             executeGridPlaybook(record.uuid, false);
                         },
                         class: 'btn-primary margin-right-sm',
-                        iconClass: 'icon icon-execute',
+                        iconClass: record.icon || 'icon icon-execute',
                         disabled: false,
                         hide: false
                     };
@@ -50,7 +50,7 @@
                             executeGridPlaybook(record.uuid, true);
                         },
                         class: 'btn-primary margin-right-sm',
-                        iconClass: 'icon icon-execute',
+                        iconClass: record.icon || 'icon icon-execute',
                         disabled: false,
                         hide: false
                     };
@@ -90,18 +90,20 @@
         }
 
         function refreshGridData() {
-            _init(true);
+				
+            return _init(true);
         }
 
         function setGridApi(gridApi) {
             $scope.gridApi = gridApi;
             $scope.gridApi.selection.clearSelectedRows();
         }
-
+        
         $scope.getSelectedRows = function () {
             return $scope.gridApi.selection.getSelectedRows();
         };
 
+      
         function executeGridPlaybook(playbookUUId, executeWithRecord) {
             $resource(API.BASE + API.WORKFLOWS + playbookUUId).get({ '$relationships': true }).$promise.then(function (playbook) {
                 var triggerStep = playbookService.getTriggerStep(playbook);
@@ -112,17 +114,17 @@
             });
         }
 
-
         function _init(refreshDataOnly) {
             if (refreshDataOnly) {
                 $scope.processing = false;
             } else {
                 $scope.processing = true;
             }
-            triggerPlaybook($scope.config.actionButtons[0].uuid, refreshDataOnly);
+            return triggerPlaybook($scope.config.actionButtons[0].uuid, refreshDataOnly);
         }
 
         function triggerPlaybook(uuid, refreshDataOnly) {
+          var defer = $q.defer();
             var playbookQuery = {
                 "$limit": 30,
                 "$relationships": true
@@ -131,7 +133,9 @@
                 getTriggeredTaskID(playbook, refreshDataOnly);
             }).finally(function () {
                 $scope.processing = false;
+              defer.resolve();
             });
+          return defer.promise;
         }
 
         function getTriggeredTaskID(selectedPlaybook, refreshDataOnly) {

@@ -10,22 +10,34 @@
         $scope.cancel = cancel;
         $scope.save = save;
         $scope.config = config;
-        if(!$scope.config.actionButtons){
-          $scope.config.actionButtons = [];
+        if (!$scope.config.actionButtons) {
+            $scope.config.actionButtons = [];
+        }
+        if (!$scope.config.selectedPlaybooksWithoutRecord) {
+            $scope.config.selectedPlaybooksWithoutRecord = [];
+        }
+        if (!$scope.config.selectedPlaybooksWithRecord) {
+            $scope.config.selectedPlaybooksWithRecord = [];
         }
         $scope.changedCollection = changedCollection;
         $scope.addButton = addButton;
+        $scope.addButtonWithRecord = addButtonWithRecord;
+        $scope.addButtonWithoutRecord = addButtonWithoutRecord;
         $scope.removeButton = removeButton;
-		$scope.config.selectedPlaybooks = []; 
-      
+        $scope.removeButtonWithRecord = removeButtonWithRecord;
+        $scope.removeButtonWithoutRecord = removeButtonWithoutRecord;
+        $scope.config.selectedPlaybooks = [];
+
         function changedCollection() {
-			$scope.config.selectedPlaybooks = [];  
-          $scope.config.actionButtons = [];
+            $scope.config.selectedPlaybooks = [];
+            $scope.config.actionButtons = [];
+            $scope.config.selectedPlaybooksWithoutRecord = [];
+            $scope.config.selectedPlaybooksWithRecord = [];
             getCollectionPlaybooks();
         }
-      
-      function getCollectionPlaybooks() {
-        var collectionUUID = $filter('getEndPathName')(config.playbookCollection['@id']);
+
+        function getCollectionPlaybooks() {
+            var collectionUUID = $filter('getEndPathName')(config.playbookCollection['@id']);
             var playbookQuery = {
                 '$limit': 100,
                 '$orderby': 'name',
@@ -39,7 +51,7 @@
                 defer.reject(error);
 
             });
-      }
+        }
         function cancel() {
             $uibModalInstance.dismiss('cancel');
         }
@@ -47,15 +59,31 @@
         function save() {
             $uibModalInstance.close($scope.config);
         }
-		
+
         function addButton(playbook) {
-   $scope.config.actionButtons.push(playbook);
-      }
-  
-      function removeButton(index) {
-        $scope.config.actionButtons.splice(index, 1);
-      }
-      
+            $scope.config.actionButtons.push(playbook);
+        }
+
+        function addButtonWithoutRecord(playbook) {
+            $scope.config.selectedPlaybooksWithoutRecord.push(playbook);
+        }
+
+        function addButtonWithRecord(playbook) {
+            $scope.config.selectedPlaybooksWithRecord.push(playbook);
+        }
+
+        function removeButton(index) {
+            $scope.config.actionButtons.splice(index, 1);
+        }
+
+        function removeButtonWithRecord(index) {
+            $scope.config.selectedPlaybooksWithRecord.splice(index, 1);
+        }
+
+        function removeButtonWithoutRecord(index) {
+            $scope.config.selectedPlaybooksWithoutRecord.splice(index, 1);
+        }
+
         function _init() {
             $scope.getWorkflowCollectionsField = new Field({
                 'name': 'Workflow Collections',
@@ -79,9 +107,9 @@
                 }
             });
             $scope.getWorkflowCollectionsField.displayTemplate = '{{ name }}';
-          if(config.playbookCollection) {
-           getCollectionPlaybooks(); 
-          }
+            if (config.playbookCollection) {
+                getCollectionPlaybooks();
+            }
         }
         _init();
 
