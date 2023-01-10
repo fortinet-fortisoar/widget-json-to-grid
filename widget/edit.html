@@ -8,38 +8,40 @@
     </div>
     <div class="modal-body">
         <div class="typehead-field" name="userForm">
+            <h6>Converts a given JSON input to an actionable Grid visualization</h6>
             <div class="row margin-bottom-sm">
-                <div class="col-md-6 padding-right-0">
+                <div class="col-md-12">
                     <div class="form-group margin-bottom-0">
-                        <label for="resourcefields" class="control-label margin-top-sm">Select Playbook Collection<span
+                        <label for="resourcefields" class="control-label margin-top-sm">Playbook Collection<span
                                 class="text-danger">*</span></label>
                         <div data-cs-typeahead="getWorkflowCollectionsField"
                             data-placeholder="'Select Playbook Collection'" data-ng-model="config.playbookCollection"
-                            data-form-name="'variableForm'" data-change-method="changedCollection"></div>
+                            data-form-name="'variableForm'" class="width-100pt" data-change-method="changedCollection">
+                        </div>
                     </div>
                     <div data-cs-messages="editJsonToGridForm.resourcefields"></div>
                 </div>
             </div>
-            <label class="control-label padding-top-18px">Data Provider Playbook<span
-                    class="text-danger">*</span></label>
-            <div class="row">
-                <div class="col-md-6">
+            <div class="row margin-bottom-sm">
+                <div class="col-md-12">
                     <div class="form-group margin-bottom-0">
-                        <select name="selectedPlaybook" id="selectedPlaybook" class="form-control"
-                            data-ng-model="newPlaybook" data-ng-options="playbook.name for playbook in playbookData"
-                            data-ng-change="addButton(newPlaybook)">
-                            <option value="">Select a Playbook</option>
-                        </select>
+                        <label class="control-label">JSON Data Provider Playbook<span
+                                class="text-danger">*</span></label>
+                        <div class="cs-select">
+                            <select name="selectedPlaybook" id="selectedPlaybook" class="form-control"
+                                data-ng-model="newPlaybook" data-ng-options="playbook.name for playbook in playbookData"
+                                data-ng-change="addButton(newPlaybook)" data-ng-disabled="config.actionButtons.length > 0">
+                                <option value="">Select a Playbook</option>
+                            </select>
+                            <span class="fa fa-sort-desc"></span>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-8">
-                    <ul id="action-editor" class="list-group margin-top-md clearfix" data-as-sortable
+                    <ul id="action-editor" class="list-group margin-top-md clearfix margin-bottom-0" data-as-sortable
                         data-ng-model="config.actionButtons" data-ng-show="playbookData">
-                        <li id="draggable-item-all{{$index}}" class="column-editor-block"
+                        <li id="draggable-item-all{{$index}}" class="column-editor-block margin-bottom-sm"
                             data-ng-repeat="action in config.actionButtons" data-as-sortable-item>
-                            <div cs-icons data-ng-model="action.icon" style="width: 50px; display: inline-block;"></div>
+                            <div cs-icons data-ng-model="action.icon" style="width: 50px; display: inline-block;">
+                            </div>
                             <div data-as-sortable-item-handle class="column-editor-text" title="{{ action.name }}">
                                 {{action.name}}</div>
                             <span class="icon icon-close text-danger pull-right margin-top-sm"
@@ -48,60 +50,76 @@
                     </ul>
                 </div>
             </div>
-            <label class="control-label padding-top-18px">Action Buttons (No Record Selection)<span
-                    class="text-danger">*</span></label>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group margin-bottom-0">
-                        <select name="select_playbooks_without_record" id="select_playbooks_without_record" class="form-control"
-                            data-ng-model="withRecordnewPlaybook" data-ng-options="playbook.name for playbook in playbookData"
-                            data-ng-change="addButtonWithoutRecord(withRecordnewPlaybook)">
-                            <option value="">Select a Playbook</option>
-                        </select>
+            <hr>
+            <div class="checkbox-inline">
+                <label for="showButton" class="control-label">
+                    <input id="showButton" type="checkbox" name="showButton" data-ng-model="config.showButton">
+                    <span class="display-inline-block margin-top-1">Enable Grid Action Buttons</span>
+                </label>
+                <span data-uib-tooltip="Ensure the playbooks are in same collection as JSON input playbook"
+                    data-tooltip-append-to-body="true"><i class="margin-left-sm icon icon-information font-Size-13">
+                    </i></span>
+            </div>
+            <div data-ng-if="config.showButton">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group margin-bottom-0">
+                            <label class="control-label padding-top-18px">Action Buttons (No Record Selection)<span
+                                    class="text-danger">*</span></label>
+                            <select name="select_playbooks_without_record" id="select_playbooks_without_record"
+                                class="form-control" data-ng-model="withRecordnewPlaybook"
+                                data-ng-options="playbook.name for playbook in playbookData"
+                                data-ng-change="addButtonWithoutRecord(withRecordnewPlaybook)">
+                                <option value="">Select a Playbook</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-8">
-                    <ul id="action-editor-without-record" class="list-group margin-top-md clearfix" data-as-sortable
-                        data-ng-model="config.selectedPlaybooksWithoutRecord" data-ng-show="playbookData">
-                        <li id="without-record-draggable-item-all{{$index}}" class="column-editor-block"
-                            data-ng-repeat="action in config.selectedPlaybooksWithoutRecord" data-as-sortable-item>
-                            <div cs-icons data-ng-model="action.icon" style="width: 50px; display: inline-block;"></div>
-                            <div data-as-sortable-item-handle class="column-editor-text" title="{{ action.name }}">
-                                {{action.name}}</div>
-                            <span class="icon icon-close text-danger pull-right margin-top-sm"
-                                data-ng-click="removeButtonWithoutRecord($index)"></span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <label class="control-label padding-top-18px">Action Buttons (With Record Selection)<span
-                    class="text-danger">*</span></label>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group margin-bottom-0">
-                        <select name="select_playbooks_with_record" id="select_playbooks_with_record" class="form-control"
-                            data-ng-model="withoutRecordnewPlaybook" data-ng-options="playbook.name for playbook in playbookData"
-                            data-ng-change="addButtonWithRecord(withoutRecordnewPlaybook)">
-                            <option value="">Select a Playbook</option>
-                        </select>
+                <div class="row">
+                    <div class="col-md-8">
+                        <ul id="action-editor-without-record" class="list-group margin-top-md clearfix margin-bottom-0" data-as-sortable
+                            data-ng-model="config.selectedPlaybooksWithoutRecord" data-ng-show="playbookData">
+                            <li id="without-record-draggable-item-all{{$index}}" class="column-editor-block margin-bottom-sm"
+                                data-ng-repeat="action in config.selectedPlaybooksWithoutRecord" data-as-sortable-item>
+                                <div cs-icons data-ng-model="action.icon" style="width: 50px; display: inline-block;">
+                                </div>
+                                <div data-as-sortable-item-handle class="column-editor-text" title="{{ action.name }}">
+                                    {{action.name}}</div>
+                                <span class="icon icon-close text-danger pull-right margin-top-sm"
+                                    data-ng-click="removeButtonWithoutRecord($index)"></span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-8">
-                    <ul id="action-editor-with-record" class="list-group margin-top-md clearfix" data-as-sortable
-                        data-ng-model="config.selectedPlaybooksWithRecord" data-ng-show="playbookData">
-                        <li id="with-record-draggable-item-all{{$index}}" class="column-editor-block"
-                            data-ng-repeat="action in config.selectedPlaybooksWithRecord" data-as-sortable-item>
-                            <div cs-icons data-ng-model="action.icon" style="width: 50px; display: inline-block;"></div>
-                            <div data-as-sortable-item-handle class="column-editor-text" title="{{ action.name }}">
-                                {{action.name}}</div>
-                            <span class="icon icon-close text-danger pull-right margin-top-sm"
-                                data-ng-click="removeButtonWithRecord($index)"></span>
-                        </li>
-                    </ul>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group margin-bottom-0">
+                            <label class="control-label padding-top-18px">Action Buttons (With Record Selection)<span
+                                    class="text-danger">*</span></label>
+                            <select name="select_playbooks_with_record" id="select_playbooks_with_record"
+                                class="form-control" data-ng-model="withoutRecordnewPlaybook"
+                                data-ng-options="playbook.name for playbook in playbookData"
+                                data-ng-change="addButtonWithRecord(withoutRecordnewPlaybook)">
+                                <option value="">Select a Playbook</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <ul id="action-editor-with-record" class="list-group margin-top-md clearfix margin-bottom-0" data-as-sortable
+                            data-ng-model="config.selectedPlaybooksWithRecord" data-ng-show="playbookData">
+                            <li id="with-record-draggable-item-all{{$index}}" class="column-editor-block margin-bottom-sm"
+                                data-ng-repeat="action in config.selectedPlaybooksWithRecord" data-as-sortable-item>
+                                <div cs-icons data-ng-model="action.icon" style="width: 50px; display: inline-block;">
+                                </div>
+                                <div data-as-sortable-item-handle class="column-editor-text" title="{{ action.name }}">
+                                    {{action.name}}</div>
+                                <span class="icon icon-close text-danger pull-right margin-top-sm"
+                                    data-ng-click="removeButtonWithRecord($index)"></span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -112,4 +130,5 @@
         <button id="edit-widget-cancel" type="button" class="btn btn-sm btn-default" data-ng-click="cancel()"><i
                 class="icon icon-close margin-right-sm"></i>Close</button>
     </div>
+
 </form>
