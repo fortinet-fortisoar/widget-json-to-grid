@@ -110,6 +110,7 @@
                 var entity = new Entity(triggerStep.arguments.resources[0]);
                 entity.loadFields().then(function () {
                     playbookService.triggerPlaybookAction(playbook, $scope.getSelectedRows, $scope, true, entity);
+                    $scope.gridApi.selection.clearSelectedRows();
                 });
             });
         }
