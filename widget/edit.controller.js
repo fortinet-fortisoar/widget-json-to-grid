@@ -61,7 +61,7 @@
 
         function addButton(playbook) {
             $scope.config.actionButtons.push(playbook);
-            $scope.newPlaybook = '';
+            $scope.selectedPlaybook = '';
         }
 
         function addButtonWithoutRecord(playbook) {
