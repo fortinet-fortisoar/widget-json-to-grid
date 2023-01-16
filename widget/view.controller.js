@@ -4,60 +4,77 @@
         .module('cybersponse')
         .controller('jsonToGrid100Ctrl', jsonToGrid100Ctrl);
 
-        jsonToGrid100Ctrl.$inject = ['$scope', '$resource', 'API', 'playbookService', 'config', '$http', '$q', 'toaster', 'Entity', '$filter'];
+        jsonToGrid100Ctrl.$inject = ['$scope', '$resource', 'API', 'playbookService', 'config', '$http', '$q', 'toaster', 'Entity', '$filter', 'Modules'];
 
-    function jsonToGrid100Ctrl($scope, $resource, API, playbookService, config, $http, $q, toaster, Entity, $filter) {
+    function jsonToGrid100Ctrl($scope, $resource, API, playbookService, config, $http, $q, toaster, Entity, $filter, Modules) {
 
         $scope.executeGridPlaybook = executeGridPlaybook;
         $scope.refreshGridData = refreshGridData;
         var selectButtons = [];
         var buttons = [];
         var playbookQuery = {
-            "$limit": 30,
-            "$relationships": true
+            '$limit': 30,
+            '$relationships': true
         };
-        if ($scope.config.selectedPlaybooksWithoutRecord.length > 0) {
-            angular.forEach($scope.config.selectedPlaybooksWithoutRecord, function (record, index) {
-                $resource(API.BASE + API.WORKFLOWS + record.uuid).get(playbookQuery).$promise.then(function (playbook) {
-                    var triggerStep = _.find(playbook.steps, function (item) { return item['@id'] === playbook.triggerStep; });
-                    var buttonText = triggerStep.arguments.title;
-                    var button = {
-                        id: 'btn-pb-without-record_' + index,
-                        text: buttonText || record.name,
-                        onClick: function () {
-                            executeGridPlaybook(record.uuid, false);
-                        },
-                        class: 'btn-primary margin-right-sm',
-                        iconClass: record.icon || 'icon icon-execute',
-                        disabled: false,
-                        hide: false
-                    };
-                    buttons.push(button);
-                });
+   
+        if ($scope.config.selectedPlaybooksWithoutRecord.length > 0) {  
+            var playbookIdsWithoutRecords = [];
+            angular.forEach($scope.config.selectedPlaybooksWithoutRecord, function (record) {
+                playbookIdsWithoutRecords.push(record.uuid);
             });
-            setGridOptions();
-        }
+            var params = {
+                module: 'workflows',
+                'uuid$in': playbookIdsWithoutRecords.join('|'),
+                $relationships: true,
+                $export: true
+            };
+            Modules.get(params).$promise.then(function(result){
+              createGridButtons(result['hydra:member'], 'withoutRecords');
+            });
+        } 
+      
+        if ($scope.config.selectedPlaybooksWithRecord.length > 0) {  
+            var playbookIdsWithRecords = [];
+            angular.forEach($scope.config.selectedPlaybooksWithRecord, function (record) {
+                playbookIdsWithRecords.push(record.uuid);
+            });
+            var params = {
+                module: 'workflows',
+                'uuid$in': playbookIdsWithRecords.join('|'),
+                $relationships: true,
+                $export: true
+            };
+            Modules.get(params).$promise.then(function(result){
+              createGridButtons(result['hydra:member'], 'withRecords');
+            });
+        } 
 
-        if ($scope.config.selectedPlaybooksWithRecord.length > 0) {
-            angular.forEach($scope.config.selectedPlaybooksWithRecord, function (record, index) {
-                $resource(API.BASE + API.WORKFLOWS + record.uuid).get(playbookQuery).$promise.then(function (playbook) {
-                    var triggerStep = _.find(playbook.steps, function (item) { return item['@id'] === playbook.triggerStep; });
-                    var buttonText = triggerStep.arguments.title;
-                    var button = {
-                        id: 'btn-pb-with-record_' + index,
-                        text: buttonText || record.name,
-                        onClick: function () {
-                            executeGridPlaybook(record.uuid, true);
-                        },
-                        class: 'btn-primary margin-right-sm',
-                        iconClass: record.icon || 'icon icon-execute',
-                        disabled: false,
-                        hide: false
-                    };
-                    selectButtons.push(button);
-                });
+      function createGridButtons(playbooks, playbookType){
+            angular.forEach(playbooks, function(playbook, index){
+                var triggerStep = _.find(playbook.steps, function (item) { return item.uuid === $filter('getEndPathName')(playbook.triggerStep);});
+                var buttonText = triggerStep.arguments.title;
+                var button = {
+                    id: 'btn-pb-with-record_' + index,
+                    text: buttonText || playbook.name,
+                    onClick: function () {
+                        executeGridPlaybook(playbook.uuid, true);
+                    },
+                    class: 'btn-primary margin-right-sm',
+                    iconClass: playbook.icon || 'icon icon-execute',
+                    disabled: false,
+                    hide: false
+                };
+                if(playbookType === 'withoutRecords'){
+                  buttons.push(button);
+                }
+              
+                if(playbookType === 'withRecords'){
+                  selectButtons.push(button);	
+                }
+                $scope.gridOptions.csOptions.buttons = buttons;
+                $scope.gridOptions.csOptions.selectButtons = selectButtons;
+                
             });
-            setGridOptions();
         }
 
 
@@ -89,8 +106,7 @@
             };
         }
 
-        function refreshGridData() {
-				
+        function refreshGridData() {	
             return _init(true);
         }
 
@@ -116,8 +132,7 @@
                  }
                }
              };
-             $resource(apiNoTrigger).save(env).$promise.then(function(response) {
-                console.log(response);
+             $resource(apiNoTrigger).save(env).$promise.then(function() {
              });
              $scope.gridApi.selection.clearSelectedRows();
            } else{
@@ -138,14 +153,16 @@
             } else {
                 $scope.processing = true;
             }
+            setGridOptions();
             return triggerPlaybook($scope.config.actionButtons[0].uuid, refreshDataOnly);
+            
         }
 
         function triggerPlaybook(uuid, refreshDataOnly) {
           var defer = $q.defer();
             var playbookQuery = {
-                "$limit": 30,
-                "$relationships": true
+                '$limit': 30,
+                '$relationships': true
             };
             $resource(API.BASE + API.WORKFLOWS + uuid).get(playbookQuery).$promise.then(function (playbook) {
                 getTriggeredTaskID(playbook, refreshDataOnly);

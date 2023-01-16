@@ -45,7 +45,6 @@
                 '__selectFields': 'name,description'
             };
             $resource(API.BASE + 'workflows').get(playbookQuery).$promise.then(function (response) {
-                //defer.resolve(response);
                 $scope.playbookData = response['hydra:member'];
             }, function (error) {
                 defer.reject(error);
