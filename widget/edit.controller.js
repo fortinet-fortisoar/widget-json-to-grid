@@ -4,7 +4,7 @@
         .module('cybersponse')
         .controller('editJsonToGrid100Ctrl', editJsonToGrid100Ctrl);
 
-        editJsonToGrid100Ctrl.$inject = ['$scope', '$resource', 'API', '$uibModalInstance', 'config', 'playbookService', 'statusCodeService', 'Field', '$filter'];
+    editJsonToGrid100Ctrl.$inject = ['$scope', '$resource', 'API', '$uibModalInstance', 'config', 'playbookService', 'statusCodeService', 'Field', '$filter'];
 
     function editJsonToGrid100Ctrl($scope, $resource, API, $uibModalInstance, config, playbookService, statusCodeService, Field, $filter) {
         $scope.cancel = cancel;

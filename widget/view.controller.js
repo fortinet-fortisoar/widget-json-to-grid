@@ -16,7 +16,7 @@
             '$limit': 30,
             '$relationships': true
         };
-   
+        
         if ($scope.config.selectedPlaybooksWithoutRecord.length > 0) {  
             var playbookIdsWithoutRecords = [];
             angular.forEach($scope.config.selectedPlaybooksWithoutRecord, function (record) {
@@ -60,19 +60,21 @@
                         executeGridPlaybook(playbook.uuid, true);
                     },
                     class: 'btn-primary margin-right-sm',
-                    iconClass: playbook.icon || 'icon icon-execute',
                     disabled: false,
                     hide: false
                 };
+                var playbookButtonObjects = _.union($scope.config.selectedPlaybooksWithoutRecord, $scope.config.selectedPlaybooksWithRecord);
+                var  playbookButtonObject = _.find(playbookButtonObjects, function (item) { return item.uuid === playbook.uuid;});
+                button.iconClass = playbookButtonObject.icon || 'icon icon-execute';
                 if(playbookType === 'withoutRecords'){
                   buttons.push(button);
+                  $scope.gridOptions.csOptions.buttons = buttons;
                 }
               
                 if(playbookType === 'withRecords'){
                   selectButtons.push(button);	
+                  $scope.gridOptions.csOptions.selectButtons = selectButtons;
                 }
-                $scope.gridOptions.csOptions.buttons = buttons;
-                $scope.gridOptions.csOptions.selectButtons = selectButtons;
                 
             });
         }
