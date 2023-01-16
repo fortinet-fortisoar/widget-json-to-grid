@@ -4,9 +4,9 @@
         .module('cybersponse')
         .controller('jsonToGrid100Ctrl', jsonToGrid100Ctrl);
 
-        jsonToGrid100Ctrl.$inject = ['$scope', '$resource', 'API', 'playbookService', 'config', '$http', '$q', 'toaster', 'Entity', '$filter', 'Modules'];
+        jsonToGrid100Ctrl.$inject = ['$scope', '$resource', 'API', 'playbookService', 'config', '$http', '$q', 'toaster', 'Entity', '$filter', 'Modules', '_'];
 
-    function jsonToGrid100Ctrl($scope, $resource, API, playbookService, config, $http, $q, toaster, Entity, $filter, Modules) {
+    function jsonToGrid100Ctrl($scope, $resource, API, playbookService, config, $http, $q, toaster, Entity, $filter, Modules, _) {
 
         $scope.executeGridPlaybook = executeGridPlaybook;
         $scope.refreshGridData = refreshGridData;
