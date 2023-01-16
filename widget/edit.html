@@ -89,7 +89,7 @@
                             <li id="without-record-draggable-item-all{{$index}}"
                                 class="column-editor-block margin-bottom-sm"
                                 data-ng-repeat="action in config.selectedPlaybooksWithoutRecord" data-as-sortable-item>
-                                <div cs-icons data-ng-model="action.icon" style="width: 50px; display: inline-block;">
+                                <div cs-icons data-ng-model="action.icon">
                                 </div>
                                 <div data-as-sortable-item-handle class="column-editor-text" title="{{ action.name }}">
                                     {{action.name}}</div>
@@ -121,7 +121,7 @@
                             <li id="with-record-draggable-item-all{{$index}}"
                                 class="column-editor-block margin-bottom-sm"
                                 data-ng-repeat="action in config.selectedPlaybooksWithRecord" data-as-sortable-item>
-                                <div cs-icons data-ng-model="action.icon" style="width: 50px; display: inline-block;">
+                                <div cs-icons data-ng-model="action.icon">
                                 </div>
                                 <div data-as-sortable-item-handle class="column-editor-text" title="{{ action.name }}">
                                     {{action.name}}</div>
