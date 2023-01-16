@@ -4,9 +4,9 @@
         .module('cybersponse')
         .controller('jsonToGrid100Ctrl', jsonToGrid100Ctrl);
 
-        jsonToGrid100Ctrl.$inject = ['$scope', '$resource', 'API', 'playbookService', 'config', '$http', '$q', 'toaster', 'Entity'];
+        jsonToGrid100Ctrl.$inject = ['$scope', '$resource', 'API', 'playbookService', 'config', '$http', '$q', 'toaster', 'Entity', '$filter'];
 
-    function jsonToGrid100Ctrl($scope, $resource, API, playbookService, config, $http, $q, toaster, Entity) {
+    function jsonToGrid100Ctrl($scope, $resource, API, playbookService, config, $http, $q, toaster, Entity, $filter) {
 
         $scope.executeGridPlaybook = executeGridPlaybook;
         $scope.refreshGridData = refreshGridData;
@@ -105,7 +105,23 @@
 
       
         function executeGridPlaybook(playbookUUId, executeWithRecord) {
-            $resource(API.BASE + API.WORKFLOWS + playbookUUId).get({ '$relationships': true }).$promise.then(function (playbook) {
+          
+           if(executeWithRecord){
+             var apiNoTrigger = API.MANUAL_TRIGGER + playbookUUId;
+             var selectedRows = $scope.getSelectedRows();
+             var env = {
+               'request':{
+                 'data':{
+                   'records': selectedRows
+                 }
+               }
+             };
+             $resource(apiNoTrigger).save(env).$promise.then(function(response) {
+                console.log(response);
+             });
+             $scope.gridApi.selection.clearSelectedRows();
+           } else{
+              $resource(API.BASE + API.WORKFLOWS + playbookUUId).get({ '$relationships': true }).$promise.then(function (playbook) {
                 var triggerStep = playbookService.getTriggerStep(playbook);
                 var entity = new Entity(triggerStep.arguments.resources[0]);
                 entity.loadFields().then(function () {
@@ -113,6 +129,7 @@
                     $scope.gridApi.selection.clearSelectedRows();
                 });
             });
+           }
         }
 
         function _init(refreshDataOnly) {
