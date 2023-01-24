@@ -7,49 +7,26 @@
         jsonToGrid100Ctrl.$inject = ['$scope', '$resource', 'API', 'playbookService', 'config', '$http', '$q', 'toaster', 'Entity', '$filter', 'Modules', '_'];
 
     function jsonToGrid100Ctrl($scope, $resource, API, playbookService, config, $http, $q, toaster, Entity, $filter, Modules, _) {
-
-        $scope.executeGridPlaybook = executeGridPlaybook;
+		$scope.executeGridPlaybook = executeGridPlaybook;
         $scope.refreshGridData = refreshGridData;
         var selectButtons = [];
         var buttons = [];
-        var playbookQuery = {
-            '$limit': 30,
-            '$relationships': true
-        };
-        
-        if ($scope.config.selectedPlaybooksWithoutRecord.length > 0) {  
-            var playbookIdsWithoutRecords = [];
-            angular.forEach($scope.config.selectedPlaybooksWithoutRecord, function (record) {
-                playbookIdsWithoutRecords.push(record.uuid);
-            });
-            var params = {
-                module: 'workflows',
-                'uuid$in': playbookIdsWithoutRecords.join('|'),
-                $relationships: true,
-                $export: true
-            };
-            Modules.get(params).$promise.then(function(result){
-              createGridButtons(result['hydra:member'], 'withoutRecords');
-            });
-        } 
       
-        if ($scope.config.selectedPlaybooksWithRecord.length > 0) {  
-            var playbookIdsWithRecords = [];
-            angular.forEach($scope.config.selectedPlaybooksWithRecord, function (record) {
-                playbookIdsWithRecords.push(record.uuid);
-            });
+        function loadGriOptions(){
+            setGridOptions();
+            var playbookIds = _.pluck(_.union($scope.config.selectedPlaybooksWithRecord, $scope.config.selectedPlaybooksWithoutRecord),'uuid');
             var params = {
                 module: 'workflows',
-                'uuid$in': playbookIdsWithRecords.join('|'),
+                'uuid$in': playbookIds.join('|'),
                 $relationships: true,
                 $export: true
             };
             Modules.get(params).$promise.then(function(result){
-              createGridButtons(result['hydra:member'], 'withRecords');
+              createGridButtons(result['hydra:member']);
             });
-        } 
+        }
 
-      function createGridButtons(playbooks, playbookType){
+      function createGridButtons(playbooks){
             angular.forEach(playbooks, function(playbook, index){
                 var triggerStep = _.find(playbook.steps, function (item) { return item.uuid === $filter('getEndPathName')(playbook.triggerStep);});
                 var buttonText = triggerStep.arguments.title;
@@ -63,15 +40,18 @@
                     disabled: false,
                     hide: false
                 };
-                var playbookButtonObjects = _.union($scope.config.selectedPlaybooksWithoutRecord, $scope.config.selectedPlaybooksWithRecord);
-                var  playbookButtonObject = _.find(playbookButtonObjects, function (item) { return item.uuid === playbook.uuid;});
-                button.iconClass = playbookButtonObject.icon || 'icon icon-execute';
-                if(playbookType === 'withoutRecords'){
+             
+                var  playbookButtonWithoutRecordObject = _.find($scope.config.selectedPlaybooksWithoutRecord, function (item) { return item.uuid === playbook.uuid;});
+                var  playbookButtonWithRecordObject = _.find($scope.config.selectedPlaybooksWithRecord, function (item) { return item.uuid === playbook.uuid;});
+
+                if(playbookButtonWithoutRecordObject){
+                  button.iconClass = playbookButtonWithoutRecordObject.icon || 'icon icon-execute';
                   buttons.push(button);
                   $scope.gridOptions.csOptions.buttons = buttons;
                 }
               
-                if(playbookType === 'withRecords'){
+                if(playbookButtonWithRecordObject){
+                  button.iconClass = playbookButtonWithRecordObject.icon || 'icon icon-execute';
                   selectButtons.push(button);	
                   $scope.gridOptions.csOptions.selectButtons = selectButtons;
                 }
@@ -92,7 +72,8 @@
                     viewType: 'staticGrid',
                     onRegisterApi: setGridApi,
                     buttons: buttons,
-                    selectButtons: selectButtons
+                    selectButtons: selectButtons,
+                    noResultsMessage: 'No change requests available.',
                 },
                 enableFiltering: false,
                 enableSelectAll: true,
@@ -109,7 +90,7 @@
         }
 
         function refreshGridData() {	
-            return _init(true);
+         	_init();
         }
 
         function setGridApi(gridApi) {
@@ -149,33 +130,26 @@
            }
         }
 
-        function _init(refreshDataOnly) {
-            if (refreshDataOnly) {
-                $scope.processing = false;
-            } else {
-                $scope.processing = true;
-            }
-            setGridOptions();
-            return triggerPlaybook($scope.config.actionButtons[0].uuid, refreshDataOnly);
-            
+        function _init() {
+            loadGriOptions();
+            triggerPlaybook($scope.config.actionButtons[0].uuid);
         }
 
-        function triggerPlaybook(uuid, refreshDataOnly) {
+        function triggerPlaybook(uuid) {
           var defer = $q.defer();
             var playbookQuery = {
                 '$limit': 30,
                 '$relationships': true
             };
             $resource(API.BASE + API.WORKFLOWS + uuid).get(playbookQuery).$promise.then(function (playbook) {
-                getTriggeredTaskID(playbook, refreshDataOnly);
+                getTriggeredTaskID(playbook);
             }).finally(function () {
-                $scope.processing = false;
               defer.resolve();
             });
           return defer.promise;
         }
 
-        function getTriggeredTaskID(selectedPlaybook, refreshDataOnly) {
+        function getTriggeredTaskID(selectedPlaybook) {
             var defer = $q.defer();
             $http.post(API.WORKFLOW + 'workflow/create-start/?format=json&force_debug=true', selectedPlaybook).then(function (result) {
                 if (result && result.data && result.data.task_id) {
@@ -202,12 +176,12 @@
             }, function (err) {
                 defer.reject(err);
             }).finally(function () {
-                $scope.processing = false;
             });
             return defer.promise;
         }
 
         function _showGrid(workflowTableResult) {
+            setGridOptions();
             $scope.gridOptions.data = workflowTableResult;
         }
         _init();
