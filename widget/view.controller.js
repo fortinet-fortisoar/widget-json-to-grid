@@ -59,7 +59,6 @@
             });
         }
 
-
         function setGridOptions() {
             $scope.gridOptions = {
                 csOptions: {
@@ -90,12 +89,11 @@
         }
 
         function refreshGridData() {	
-         	_init();
+         	return triggerPlaybook($scope.config.actionButtons[0].uuid);
         }
 
         function setGridApi(gridApi) {
             $scope.gridApi = gridApi;
-            $scope.gridApi.selection.clearSelectedRows();
         }
         
         $scope.getSelectedRows = function () {
@@ -160,11 +158,13 @@
                                     $scope.workflowTableResult = executionResult.result.grid_data;
                                     $scope.columnDefs = executionResult.result.grid_columns.columns;
                                     _showGrid($scope.workflowTableResult);
+                                    defer.resolve();
                                 }
                                 else if (response.status === 'failed') {
                                     toaster.error({
                                         body: executionResult.result['Error message']
                                     });
+                                  defer.reject();
                                 }
                             })
 
@@ -181,7 +181,6 @@
         }
 
         function _showGrid(workflowTableResult) {
-            setGridOptions();
             $scope.gridOptions.data = workflowTableResult;
         }
         _init();
