@@ -7,7 +7,7 @@
         jsonToGrid100Ctrl.$inject = ['$scope', '$resource', 'API', 'playbookService', 'config', '$http', '$q', 'toaster', 'Entity', '$filter', 'Modules', '_'];
 
     function jsonToGrid100Ctrl($scope, $resource, API, playbookService, config, $http, $q, toaster, Entity, $filter, Modules, _) {
-		$scope.executeGridPlaybook = executeGridPlaybook;
+        $scope.executeGridPlaybook = executeGridPlaybook;
         $scope.refreshGridData = refreshGridData;
         var selectButtons = [];
         var buttons = [];
@@ -74,6 +74,8 @@
                     selectButtons: selectButtons,
                     noResultsMessage: 'No change requests available.',
                 },
+                expandableRowTemplate: 'widgets/installed/jsonToGrid-1.0.0/widgetAssets/html/rowExpandable.html',
+                enableExpandable: true,
                 enableFiltering: false,
                 enableSelectAll: true,
                 enableRowSelection: false,
