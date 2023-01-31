@@ -2,11 +2,11 @@
 (function () {
     angular
         .module('cybersponse')
-        .controller('jsonToGrid100DevCtrl', jsonToGrid100DevCtrl);
+        .controller('jsonToGrid100Ctrl', jsonToGrid100Ctrl);
 
-    jsonToGrid100DevCtrl.$inject = ['$scope', '$resource', 'API', 'playbookService', 'config', '$http', '$q', 'toaster', 'Entity', '$filter', 'Modules', '_', 'exportService', 'currentPermissionsService', 'FIXED_MODULE', 'statusCodeService', '$uibModal'];
+    jsonToGrid100Ctrl.$inject = ['$scope', '$resource', 'API', 'playbookService', 'config', '$http', '$q', 'toaster', 'Entity', '$filter', 'Modules', '_', 'exportService', 'currentPermissionsService', 'FIXED_MODULE', 'statusCodeService', '$uibModal'];
 
-    function jsonToGrid100DevCtrl($scope, $resource, API, playbookService, config, $http, $q, toaster, Entity, $filter, Modules, _, exportService, currentPermissionsService, FIXED_MODULE, statusCodeService, $uibModal) {
+    function jsonToGrid100Ctrl($scope, $resource, API, playbookService, config, $http, $q, toaster, Entity, $filter, Modules, _, exportService, currentPermissionsService, FIXED_MODULE, statusCodeService, $uibModal) {
         $scope.executeGridPlaybook = executeGridPlaybook;
         $scope.refreshGridData = refreshGridData;
         var selectButtons = [];
