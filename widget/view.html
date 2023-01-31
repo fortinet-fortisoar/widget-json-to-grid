@@ -4,14 +4,28 @@
             data-ng-class="(page === 'dashboard' || page === 'reporting') ? 'widget-dashboard-title-width' : 'widget-title-width'">
         </div>
     </div>
-        <div class="pull-right"><span style="font-weight:400;font-size:0.8em">&nbsp;<i
-                                                                                       class="fa {{status.open===true? 'fa-chevron-up':'fa-chevron-down'}}"></i></span>
+    <div class="pull-right">
+        <span style="font-weight:400;font-size:0.8em">&nbsp;<i
+                class="fa {{status.open===true? 'fa-chevron-up':'fa-chevron-down'}}"></i></span>
+    </div>
+    <div class="clearfix"></div>
+    <div class="text-center" data-ng-if="loadProcessing">
+        <cs-spinner class="state-wait" data-show-background="true"></cs-spinner>
+        <div class="font-size-14">Fetching Grid Data ...</div>
+    </div>
+    <div class="row" data-ng-show="!loadProcessing">
+        <div class="col-md-12">
+            <div data-ng-if="refreshProcessing"
+                style="position: absolute; top:0; height:100%; background-color:rgb(238, 238, 238); z-index:999; opacity:0.3; width:100%;">
+                <cs-spinner class="state-wait" data-show-background="true"></cs-spinner>
+                <div class="text-center">Fetching Grid Data ...</div>
+            </div>
+            <div class="grid-widget-container" data-ng-class="{'no-pointer-events':refreshProcessing}" data-cs-grid
+                data-grid-options="gridOptions" data-column-defs="columnDefs"></div>
+            <div class="muted-50 font-size-14 text-center padding-top-md"
+                data-ng-if="!loadProcessing && !refreshProcessing && gridOptions.data.length === 0">No Results Found
+            </div>
         </div>
-            <div class="clearfix"></div>
-  		  <cs-spinner data-ng-show="processing" class="state-wait" data-show-background="true"></cs-spinner>
-          <div class="row" data-ng-show="!processing">
-            <div class="col-md-12">
-				<div class="grid-widget-container" data-cs-grid data-grid-options="gridOptions" data-column-defs="columnDefs"></div>
-     		</div>
-          </div>
+
+    </div>
 </div>
