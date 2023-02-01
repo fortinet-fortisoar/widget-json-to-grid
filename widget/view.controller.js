@@ -74,7 +74,7 @@
                     selectButtons: selectButtons,
                     noResultsMessage: 'No change requests available.',
                 },
-                expandableRowTemplate: 'widgets/development/jsonToGrid-1.0.0/widgetAssets/html/rowExpandable.html',
+                expandableRowTemplate: 'widgets/installed/jsonToGrid-1.0.0/widgetAssets/html/rowExpandable.html',
                 enableExpandable: true,
                 enableFiltering: false,
                 enableSelectAll: true,
