@@ -1,0 +1,32 @@
+<!-- Copyright start
+  Copyright (C) 2008 - 2022 Fortinet Inc.
+  All rights reserved.
+  FORTINET CONFIDENTIAL & FORTINET PROPRIETARY SOURCE CODE
+  Copyright end -->
+  <form data-ng-submit="save()" class="noMargin inputPrompt" name="form" data-ng-class="{'state-wait': processing }" novalidate>
+    <div class="modal-header">
+      <h3 class="modal-title col-md-9">{{triggerStep.arguments.title || playbook.name}}</h3>
+      <button type="button" class="close" data-ng-click="exit()" data-dismiss="modal" aria-label="Close" id="close-input-variable-modal-btn">
+        <div aria-hidden="true" class="version-button">+</div>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group" data-ng-repeat="(fieldName, field) in fieldObject" data-ng-class="{ 'has-error': form[field.name].$invalid && form[field.name].$touched }" data-ng-if="field.visible">
+        <div class="clearfix">
+          <label for="inputPromptForm-{{ field.name }}" class="control-label">{{ field.title }}<span class="text-danger" data-ng-show="field.required">&nbsp;*</span>&nbsp;<span data-ng-show="field.tooltip" data-uib-tooltip="{{field.tooltip}}"
+              data-tooltip-append-to-body="true"><i class="icon icon-information"></i></span></label>
+        </div>
+        <div data-ng-show="field.permission === false" class="watermark padding-0 font-size-14 text-align-left">You do not have permission for this field.</div>
+        <div data-ng-hide="field.permission === false" data-cs-field="field" data-ng-model="field.value" data-change-method="onChange"  data-form-name="'inputPromptForm'" data-ignore-editable="true"></div>
+        <div data-cs-messages="form[field.name]" data-field="field"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary" data-ng-disabled="processing || formInputs.error" id="execute-input-variable-modal-btn">
+        <cs-spinner data-ng-show="processing" class="pull-left margin-top-xsm state-wait button-spinner margin-right-sm" data-show-background="true" data-no-margin="margin-0"></cs-spinner>
+        {{ triggerStep.arguments.executeButtonText || 'Execute'}}
+      </button>
+      <button type="button" class="btn btn-default" data-ng-click="exit()" id="cancel-input-variable-modal-btn">Cancel</button>
+    </div>
+  </form>
+  
