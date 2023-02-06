@@ -16,9 +16,9 @@
     <div class="row" data-ng-show="!loadProcessing">
         <div class="col-md-12">
             <div data-ng-if="refreshProcessing"
-                style="position: absolute; top:0; height:100%; background-color:rgb(238, 238, 238); z-index:999; opacity:0.3; width:100%;">
+                style="position: absolute; top:0; height:100%; background-color:rgba(238, 238, 238, 0.3); z-index:999; width:100%;">
                 <cs-spinner class="state-wait" data-show-background="true"></cs-spinner>
-                <div class="text-center">Fetching Grid Data ...</div>
+                <div class="text-center padding-top-18px">Fetching Grid Data ...</div>
             </div>
             <div class="grid-widget-container" data-ng-class="{'no-pointer-events':refreshProcessing}" data-cs-grid
                 data-grid-options="gridOptions" data-column-defs="columnDefs"></div>
@@ -26,6 +26,5 @@
                 data-ng-if="!loadProcessing && !refreshProcessing && gridOptions.data.length === 0">No Results Found
             </div>
         </div>
-
     </div>
 </div>
