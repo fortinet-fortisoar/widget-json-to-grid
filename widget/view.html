@@ -2,11 +2,12 @@
     <div class="display-flex-space-between margin-chart">
         <div class="padding-right-0 padding-left-0 widget-dashboard-title-width"
             data-ng-class="(page === 'dashboard' || page === 'reporting') ? 'widget-dashboard-title-width' : 'widget-title-width'">
+            <h5 data-ng-if="config.title !==''" class="padding-left-lg margin-top-0 margin-bottom-0 text-overflow">
+                {{config.title}}</h5>
         </div>
-    </div>
-    <div class="pull-right">
-        <span style="font-weight:400;font-size:0.8em">&nbsp;<i
-                class="fa {{status.open===true? 'fa-chevron-up':'fa-chevron-down'}}"></i></span>
+        <div class="padding-right-0 padding-left-0 widget-dashboard-title-width"
+            data-ng-class="(page === 'dashboard' || page === 'reporting') ? 'widget-dashboard-title-width' : 'widget-title-width'">
+        </div>
     </div>
     <div class="clearfix"></div>
     <div class="text-center" data-ng-if="loadProcessing">
@@ -14,7 +15,7 @@
         <div class="font-size-14">Fetching Grid Data ...</div>
     </div>
     <div class="row" data-ng-show="!loadProcessing">
-        <div class="col-md-12">
+        <div class="col-md-12 margin-bottom-30 padding-left-28 padding-right-30">
             <div data-ng-if="refreshProcessing"
                 style="position: absolute; top:0; height:100%; background-color:rgba(238, 238, 238, 0.3); z-index:999; width:100%;">
                 <cs-spinner class="state-wait" data-show-background="true"></cs-spinner>

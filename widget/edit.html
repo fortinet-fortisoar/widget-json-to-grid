@@ -12,6 +12,16 @@
             <div class="row margin-bottom-sm">
                 <div class="col-md-12">
                     <div class="form-group margin-bottom-0">
+                        <label for="title" class="control-label margin-top-sm">Title<span
+                                class="text-danger">*</span></label>
+                        <input id="title" name="title" type="text" class="form-control" data-ng-model="config.title">
+                    </div>
+                    <div data-cs-messages="editJsonToGridForm.resourcefields"></div>
+                </div>
+            </div>
+            <div class="row margin-bottom-sm">
+                <div class="col-md-12">
+                    <div class="form-group margin-bottom-0">
                         <label for="resourcefields" class="control-label margin-top-sm">Playbook Collection<span
                                 class="text-danger">*</span></label>
                         <span
@@ -34,7 +44,8 @@
                                 class="text-danger">*</span></label>
                         <div class="cs-select">
                             <select name="selectedPlaybook" id="selectedPlaybook" class="form-control"
-                                data-ng-model="selectedPlaybook" data-ng-options="playbook.name for playbook in playbookData"
+                                data-ng-model="selectedPlaybook"
+                                data-ng-options="playbook.name for playbook in playbookData"
                                 data-ng-change="addButton(selectedPlaybook)"
                                 data-ng-disabled="config.actionButtons.length > 0">
                                 <option value="">Select a Playbook</option>
@@ -42,11 +53,11 @@
                             <span class="fa fa-sort-desc"></span>
                         </div>
                     </div>
-                    <ul id="jsonDataProviderPlaybook" class="list-group margin-top-md clearfix margin-bottom-0" data-as-sortable
-                        data-ng-model="config.actionButtons" data-ng-show="playbookData">
+                    <ul id="jsonDataProviderPlaybook" class="list-group margin-top-md clearfix margin-bottom-0"
+                        data-as-sortable data-ng-model="config.actionButtons" data-ng-show="playbookData">
                         <li id="draggable-item-all{{$index}}" class="column-editor-block margin-bottom-sm"
                             data-ng-repeat="action in config.actionButtons" data-as-sortable-item>
-                            <div cs-icons data-ng-model="action.icon" style="width: 50px; display: inline-block;">
+                            <div cs-icons data-ng-model="action.icon">
                             </div>
                             <div data-as-sortable-item-handle class="column-editor-text" title="{{ action.name }}">
                                 {{action.name}}</div>
@@ -70,8 +81,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group margin-bottom-0">
-                            <label class="control-label padding-top-18px">Action Buttons (No Record Selection)<span
-                                    class="text-danger">*</span></label>
+                            <label class="control-label padding-top-18px">Action Buttons (No Record Selection)</label>
                             <select name="select_playbooks_without_record" id="select_playbooks_without_record"
                                 class="form-control" data-ng-model="withRecordPlaybook"
                                 data-ng-options="playbook.name for playbook in playbookData"
@@ -93,7 +103,8 @@
                                 </div>
                                 <div data-as-sortable-item-handle class="column-editor-text" title="{{ action.name }}">
                                     {{action.name}}</div>
-                                <span id="removeButtonWithoutRecord_($index)" class="icon icon-close text-danger pull-right margin-top-sm"
+                                <span id="removeButtonWithoutRecord_($index)"
+                                    class="icon icon-close text-danger pull-right margin-top-sm"
                                     data-ng-click="removeButtonWithoutRecord($index)"></span>
                             </li>
                         </ul>
@@ -102,8 +113,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group margin-bottom-0">
-                            <label class="control-label padding-top-18px">Action Buttons (With Record Selection)<span
-                                    class="text-danger">*</span></label>
+                            <label class="control-label padding-top-18px">Action Buttons (With Record Selection)</label>
                             <select name="select_playbooks_with_record" id="select_playbooks_with_record"
                                 class="form-control" data-ng-model="withoutRecordnewPlaybook"
                                 data-ng-options="playbook.name for playbook in playbookData"
@@ -125,7 +135,8 @@
                                 </div>
                                 <div data-as-sortable-item-handle class="column-editor-text" title="{{ action.name }}">
                                     {{action.name}}</div>
-                                <span id="removeButtonWithRecord_($index)" class="icon icon-close text-danger pull-right margin-top-sm"
+                                <span id="removeButtonWithRecord_($index)"
+                                    class="icon icon-close text-danger pull-right margin-top-sm"
                                     data-ng-click="removeButtonWithRecord($index)"></span>
                             </li>
                         </ul>
