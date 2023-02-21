@@ -6,6 +6,10 @@
     "published_date": "1658838600",
     "metadata": {
         "description": "Render the json playbook result in grid view and also perform various operation on the grid",
+        "snapshots": [
+            "https:\/\/repo.fortisoar.fortinet.com\/widgets\/recordCtaBlock-1.0.0\/images\/json-to-grid-edit.png",
+            "https:\/\/repo.fortisoar.fortinet.com\/widgets\/recordCtaBlock-1.0.0\/images\/json-to-grid-view.png"
+        ],
         "pages": [
             "View Panel",
             "Listing",
@@ -13,6 +17,7 @@
         ],
         "certified": "Yes",
         "publisher": "Fortinet",
+        "help_online": "https:\/\/github.com\/fortinet-fortisoar\/widget-json-to-grid\/blob\/release\/1.0.0\/README.md",
         "compatibility": [
             "7.3.0"
         ]
