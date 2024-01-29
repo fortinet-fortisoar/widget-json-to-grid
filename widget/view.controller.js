@@ -1,13 +1,17 @@
+/* Copyright start
+  MIT License
+  Copyright (c) 2024 Fortinet Inc
+  Copyright end */
 'use strict';
 (function () {
   angular
     .module('cybersponse')
     .controller('jsonToGrid110Ctrl', jsonToGrid110Ctrl);
 
-  jsonToGrid110Ctrl.$inject = ['$scope', '$resource', 'API', 'playbookService', '$q', 'toaster', 'Entity', '$filter', 'Modules', '_', 'exportService', 'currentPermissionsService', 'FIXED_MODULE', 'statusCodeService', '$uibModal', 'jsonToGridService'];
+  jsonToGrid110Ctrl.$inject = ['$scope', '$resource', 'API', 'playbookService', '$q', 'toaster', 'Entity', '$filter', 'Modules', '_', 'exportService', 'currentPermissionsService', 'FIXED_MODULE', 'statusCodeService', '$uibModal', 'widgetService'];
 
 
-  function jsonToGrid110Ctrl($scope, $resource, API, playbookService, $q, toaster, Entity, $filter, Modules, _, exportService, currentPermissionsService, FIXED_MODULE, statusCodeService, $uibModal, jsonToGridService) {
+  function jsonToGrid110Ctrl($scope, $resource, API, playbookService, $q, toaster, Entity, $filter, Modules, _, exportService, currentPermissionsService, FIXED_MODULE, statusCodeService, $uibModal, widgetService) {
     $scope.executeGridPlaybook = executeGridPlaybook;
     $scope.refreshGridData = refreshGridData;
     var selectButtons = [];
@@ -45,7 +49,11 @@
           button.onClick = function () {
             if ($scope.config.showExecutionProgress) {
               var selectedRows = $scope.getSelectedRows();
-              jsonToGridService.launchStandaloneWidget('playbookExecutionWizard', '1.0.0', playbook, false, selectedRows).then(function () {
+              var payload = {
+                "playbookDetails": playbook,
+                "selectedRecord": selectedRows
+              };
+              widgetService.launchStandaloneWidget($scope.config.widgetName, $scope.config.widgetVersion, null, null, payload).then(function () {
                 angular.noop;
               });
               $scope.loadProcessing = false;
@@ -64,7 +72,11 @@
           button.onClick = function () {
             if ($scope.config.showExecutionProgress) {
               var selectedRows = $scope.getSelectedRows();
-              jsonToGridService.launchStandaloneWidget('playbookExecutionWizard', '1.0.0', playbook, true, selectedRows).then(function () {
+              var payload = {
+                "playbookDetails": playbook,
+                "selectedRecord": selectedRows
+              };
+              widgetService.launchStandaloneWidget($scope.config.widgetName, $scope.config.widgetVersion, null, null, payload).then(function () {
                 angular.noop;
               });
               $scope.gridApi.selection.clearSelectedRows();
