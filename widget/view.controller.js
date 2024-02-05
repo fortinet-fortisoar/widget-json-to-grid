@@ -8,10 +8,10 @@
     .module('cybersponse')
     .controller('jsonToGrid110Ctrl', jsonToGrid110Ctrl);
 
-  jsonToGrid110Ctrl.$inject = ['$scope', '$resource', 'API', 'playbookService', '$q', 'toaster', 'Entity', '$filter', 'Modules', '_', 'exportService', 'currentPermissionsService', 'FIXED_MODULE', 'statusCodeService', '$uibModal', 'widgetService'];
+  jsonToGrid110Ctrl.$inject = ['$scope', '$resource', 'API', 'playbookService', '$q', 'toaster', 'Entity', '$filter', 'Modules', '_', 'exportService', 'currentPermissionsService', 'FIXED_MODULE', 'statusCodeService', '$uibModal', 'widgetService', 'PagedCollection'];
 
 
-  function jsonToGrid110Ctrl($scope, $resource, API, playbookService, $q, toaster, Entity, $filter, Modules, _, exportService, currentPermissionsService, FIXED_MODULE, statusCodeService, $uibModal, widgetService) {
+  function jsonToGrid110Ctrl($scope, $resource, API, playbookService, $q, toaster, Entity, $filter, Modules, _, exportService, currentPermissionsService, FIXED_MODULE, statusCodeService, $uibModal, widgetService, PagedCollection) {
     $scope.executeGridPlaybook = executeGridPlaybook;
     $scope.refreshGridData = refreshGridData;
     var selectButtons = [];
@@ -204,8 +204,6 @@
       }
     }
 
-
-
     function _init() {
       $scope.loadProcessing = true;
       $scope.refreshProcessing = false;
@@ -320,9 +318,18 @@
             playbookService.getExecutedPlaybookLogData(result.instance_ids).then(function (data) {
               if (data.status) {
                 if (data.status === 'finished') {
-                  $scope.workflowTableResult = data.result.grid_data;
+                  $scope.gridOptions.data = data.result.grid_data;
                   $scope.columnDefs = data.result.grid_columns.columns;
-                  _showGrid($scope.workflowTableResult);
+                  if(data.result.grid_data.length === 0){
+                   $scope.gridPagedCollection = new PagedCollection('dummy_module', null, {}, false, null, $scope.columnDefs);
+                  $scope.gridPagedCollection.data = {
+                                                            '@context': API.API_3_BASE + 'contexts/dummy_module',
+                                                            '@id': API.API_3_BASE + 'dummy_module',
+                                                            '@type': 'hydra:Collection',
+                                                            'hydra:member': [],
+                                                            'hydra:totalItems': 0
+                                                        };
+                  }
                   $scope.loadProcessing = false;
                   $scope.refreshProcessing = false;
                   defer.resolve();
@@ -351,9 +358,6 @@
       return defer.promise;
     }
 
-    function _showGrid(workflowTableResult) {
-      $scope.gridOptions.data = workflowTableResult;
-    }
     _init();
   }
 })();
