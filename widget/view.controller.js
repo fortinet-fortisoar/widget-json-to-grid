@@ -317,7 +317,7 @@
           playbookService.checkPlaybookExecutionCompletion(taskIds, function (result) {
             playbookService.getExecutedPlaybookLogData(result.instance_ids).then(function (data) {
               if (data.status) {
-                if (data.status === 'finished') {
+                if (data.status === 'finished' && data.result) {
                   $scope.gridOptions.data = data.result.grid_data;
                   $scope.columnDefs = data.result.grid_columns.columns;
                   if(data.result.grid_data.length === 0){
