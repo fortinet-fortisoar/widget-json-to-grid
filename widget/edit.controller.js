@@ -8,12 +8,15 @@
         .module('cybersponse')
         .controller('editJsonToGrid110Ctrl', editJsonToGrid110Ctrl);
 
-    editJsonToGrid110Ctrl.$inject = ['$scope', '$resource', 'API', '$uibModalInstance', 'config', 'Field', '$filter'];
+    editJsonToGrid110Ctrl.$inject = ['$scope', '$resource', 'API', '$uibModalInstance', 'config', 'Field', '$filter', '_'];
 
-    function editJsonToGrid110Ctrl($scope, $resource, API, $uibModalInstance, config, Field, $filter) {
+    function editJsonToGrid110Ctrl($scope, $resource, API, $uibModalInstance, config, Field, $filter, _) {
         $scope.cancel = cancel;
         $scope.save = save;
         $scope.config = config;
+        $scope.config.widgetName = 'playbookExecutionWizard';
+        $scope.playbookList = [];
+        $scope.playbookButton = playbookButton;
         if (!$scope.config.actionButtons) {
             $scope.config.actionButtons = [];
         }
@@ -39,6 +42,20 @@
             $scope.config.selectedPlaybooksWithRecord = [];
             getCollectionPlaybooks();
         }
+      
+        function playbookButton(){
+           $scope.playbookList = angular.copy($scope.config.selectedPlaybooksWithRecord);
+           _mergeByProperty($scope.playbookList, $scope.config.selectedPlaybooksWithoutRecord, 'id');
+       }
+      
+      	function _mergeByProperty(playbooksWithRecord, playbooksWithoutRecord, prop) {
+    		_.each(playbooksWithoutRecord, function(playbooksWithoutRecordObj) {
+        	var playbooksWithRecordObj = _.find(playbooksWithRecord, function(playbooksWithRecordObj) {
+            	return playbooksWithRecordObj[prop] === playbooksWithoutRecordObj[prop];
+        		});
+        	playbooksWithRecordObj ? _.extend(playbooksWithRecordObj, playbooksWithoutRecordObj) : playbooksWithRecord.push(playbooksWithoutRecordObj);
+    		});
+		}
 
         function getCollectionPlaybooks() {
             var collectionUUID = $filter('getEndPathName')(config.playbookCollection['@id']);
@@ -71,22 +88,26 @@
 
         function addButtonWithoutRecord(playbook) {
             $scope.config.selectedPlaybooksWithoutRecord.push(playbook);
+          	$scope.playbookList.push(playbook);
         }
 
         function addButtonWithRecord(playbook) {
             $scope.config.selectedPlaybooksWithRecord.push(playbook);
+          	$scope.playbookList.push(playbook);
         }
 
         function removeButton(index) {
             $scope.config.actionButtons.splice(index, 1);
         }
 
-        function removeButtonWithRecord(index) {
+        function removeButtonWithRecord(index, action) {
             $scope.config.selectedPlaybooksWithRecord.splice(index, 1);
+            $scope.config.selectedExecutionWizardPlaybooks = _.reject($scope.config.selectedExecutionWizardPlaybooks, obj => obj.id === action.id);
         }
 
-        function removeButtonWithoutRecord(index) {
+        function removeButtonWithoutRecord(index, action) {
             $scope.config.selectedPlaybooksWithoutRecord.splice(index, 1);
+            $scope.config.selectedExecutionWizardPlaybooks = _.reject($scope.config.selectedExecutionWizardPlaybooks, obj => obj.id === action.id);
         }
 
         function _init() {

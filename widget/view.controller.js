@@ -44,10 +44,12 @@
           disabled: false,
           hide: false
         };
-
+        var isWizardExecution = _.some($scope.config.selectedExecutionWizardPlaybooks, function(f) {
+       return f.uuid == playbook.uuid;
+ });
         if (playbookButtonWithoutRecordObject) {
           button.onClick = function () {
-            if ($scope.config.showExecutionProgress) {
+            if ($scope.config.showExecutionProgress && !isWizardExecution) {
               var selectedRows = $scope.getSelectedRows();
               var payload = {
                 "playbookDetails": playbook,
@@ -70,7 +72,7 @@
 
         if (playbookButtonWithRecordObject) {
           button.onClick = function () {
-            if ($scope.config.showExecutionProgress) {
+            if ($scope.config.showExecutionProgress && !isWizardExecution) {
               var selectedRows = $scope.getSelectedRows();
               var payload = {
                 "playbookDetails": playbook,
