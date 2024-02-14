@@ -17,18 +17,20 @@
                 <div style="padding: 12px;">
                     <div class="row margin-bottom-sm">
                         <div class="col-md-12">
-                            <div class="form-group margin-bottom-0">
+                            <div class="form-group margin-bottom-0"
+                                data-ng-class="{ 'has-error': editJsonToGridForm.title.$invalid && editJsonToGridForm.title.$touched }">
                                 <label for="title" class="control-label margin-top-sm">Title<span
                                         class="text-danger">*</span></label>
                                 <input id="title" name="title" type="text" class="form-control"
-                                    data-ng-model="config.title">
+                                    data-ng-model="config.title" required>
                             </div>
                             <div data-cs-messages="editJsonToGridForm.resourcefields"></div>
                         </div>
                     </div>
                     <div class="row margin-bottom-sm">
                         <div class="col-md-12">
-                            <div class="form-group margin-bottom-0">
+                            <div class="form-group margin-bottom-0"
+                                data-ng-class="{'has-error': playbookData.length === 0}">
                                 <label for="resourcefields" class="control-label margin-top-sm">Playbook Collection<span
                                         class="text-danger">*</span></label>
                                 <span
@@ -36,10 +38,13 @@
                                     data-tooltip-append-to-body="true">
                                     <i class="margin-left-sm icon icon-information font-Size-13"></i>
                                 </span>
-                                <div data-cs-typeahead="getWorkflowCollectionsField"
-                                    data-placeholder="'Select Playbook Collection'"
-                                    data-ng-model="config.playbookCollection" data-form-name="'variableForm'"
-                                    class="width-100pt" data-change-method="changedCollection">
+                                <div>
+                                    <div data-cs-typeahead="getWorkflowCollectionsField"
+                                        data-placeholder="'Select Playbook Collection'"
+                                        data-ng-model="config.playbookCollection" data-form-name="'variableForm'"
+                                        class="width-100pt" data-change-method="changedCollection"
+                                        data-ng-required="playbookData.length === 0">
+                                    </div>
                                 </div>
                             </div>
                             <div data-cs-messages="editJsonToGridForm.resourcefields"></div>
@@ -47,11 +52,12 @@
                     </div>
                     <div class="row margin-bottom-sm">
                         <div class="col-md-12">
-                            <div class="form-group margin-bottom-0">
-                                <label class="control-label">JSON Data Provider Playbook<span
-                                        class="text-danger">*</span></label>
-                                <div class="cs-select">
-                                    <select name="selectedPlaybook" id="selectedPlaybook" class="form-control"
+                            <div class="cs-select"
+                                data-ng-class="{ 'has-error': editJsonToGridForm.selectedPlaybook.$invalid && editJsonToGridForm.selectedPlaybook.$touched }">
+                                <div class="form-group margin-bottom-0">
+                                    <label class="control-label">JSON Data Provider Playbook<span
+                                            class="text-danger">*</span></label>
+                                    <select name="selectedPlaybook" id="selectedPlaybook" class="form-control" required
                                         data-ng-model="selectedPlaybook"
                                         data-ng-options="playbook.name for playbook in playbookData"
                                         data-ng-change="addButton(selectedPlaybook)"
@@ -83,7 +89,8 @@
                 <div style="padding: 12px;">
                     <div class="checkbox-inline">
                         <label for="showButton" class="control-label">
-                            <input id="showButton" type="checkbox" name="showButton" data-ng-model="config.showButton">
+                            <input id="showButton" type="checkbox" name="showButton" data-ng-model="config.showButton"
+                                data-ng-click="showExecutionProgressCheckbox()">
                             <span class="display-inline-block margin-top-1">Enable Grid Action Buttons</span>
                         </label>
                         <span data-uib-tooltip="Ensure the playbooks are in same collection as JSON input playbook"
@@ -186,13 +193,12 @@
                         </div>
                         <div data-ng-if="config.showExecutionProgress">
                             <div class="form-group">
-                                <label class="control-label padding-top-18px">Playbook excluded list</label>
-                                <span
-                                data-uib-tooltip="Provide a list of playbook whose
-                                    execution you want to exclude from the playbook execution wizard"
-                                data-tooltip-append-to-body="true"><i
-                                    class="margin-left-sm icon icon-information font-Size-13">
-                                </i></span>
+                                <label class="control-label padding-top-18px">Playbook included list</label>
+                                <span data-uib-tooltip="Provide a list of playbook whose
+                                    execution you want to include in the playbook execution wizard"
+                                    data-tooltip-append-to-body="true"><i
+                                        class="margin-left-sm icon icon-information font-Size-13">
+                                    </i></span>
                                 <div class="cs-select">
                                     <ui-select name="select_playbooks" id="select_playbooks"
                                         data-ng-click="playbookButton()"
@@ -227,11 +233,6 @@
                                         <label for="widgetName" class="control-label">Widget Name</label>
                                         <input id="widgetName" name="widgetName" type="text" class="form-control"
                                             data-ng-model="config.widgetName">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="widgetVersion" class="control-label">Widget Version</label>
-                                        <input id="widgetVersion" name="widgetVersion" type="text" class="form-control"
-                                            data-ng-model="config.widgetVersion">
                                     </div>
                                 </div>
                             </uib-accordion>

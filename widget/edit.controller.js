@@ -14,9 +14,11 @@
         $scope.cancel = cancel;
         $scope.save = save;
         $scope.config = config;
-        $scope.config.widgetName = 'playbookExecutionWizard';
+        $scope.config.widgetName = 'Playbook Execution Wizard';
         $scope.playbookList = [];
         $scope.playbookButton = playbookButton;
+        $scope.playbookData = [];
+        $scope.showExecutionProgressCheckbox = showExecutionProgressCheckbox;
         if (!$scope.config.actionButtons) {
             $scope.config.actionButtons = [];
         }
@@ -33,29 +35,38 @@
         $scope.removeButton = removeButton;
         $scope.removeButtonWithRecord = removeButtonWithRecord;
         $scope.removeButtonWithoutRecord = removeButtonWithoutRecord;
-        $scope.config.selectedPlaybooks = [];
 
         function changedCollection() {
-            $scope.config.selectedPlaybooks = [];
             $scope.config.actionButtons = [];
+            $scope.playbookData = [];
             $scope.config.selectedPlaybooksWithoutRecord = [];
             $scope.config.selectedPlaybooksWithRecord = [];
+            $scope.playbookList = [];
             getCollectionPlaybooks();
         }
-      
-        function playbookButton(){
-           $scope.playbookList = angular.copy($scope.config.selectedPlaybooksWithRecord);
-           _mergeByProperty($scope.playbookList, $scope.config.selectedPlaybooksWithoutRecord, 'id');
-       }
-      
-      	function _mergeByProperty(playbooksWithRecord, playbooksWithoutRecord, prop) {
-    		_.each(playbooksWithoutRecord, function(playbooksWithoutRecordObj) {
-        	var playbooksWithRecordObj = _.find(playbooksWithRecord, function(playbooksWithRecordObj) {
-            	return playbooksWithRecordObj[prop] === playbooksWithoutRecordObj[prop];
-        		});
-        	playbooksWithRecordObj ? _.extend(playbooksWithRecordObj, playbooksWithoutRecordObj) : playbooksWithRecord.push(playbooksWithoutRecordObj);
-    		});
-		}
+
+        function showExecutionProgressCheckbox() {
+            if ($scope.config.showButton) {
+                $scope.config.selectedPlaybooksWithoutRecord = [];
+                $scope.config.selectedPlaybooksWithRecord = [];
+                $scope.playbookData = [];
+                $scope.playbookList = [];
+            }
+        }
+
+        function playbookButton() {
+            $scope.playbookList = angular.copy($scope.config.selectedPlaybooksWithRecord);
+            _mergeByProperty($scope.playbookList, $scope.config.selectedPlaybooksWithoutRecord, 'id');
+        }
+
+        function _mergeByProperty(playbooksWithRecord, playbooksWithoutRecord, prop) {
+            _.each(playbooksWithoutRecord, function (playbooksWithoutRecordObj) {
+                var playbooksWithRecordObj = _.find(playbooksWithRecord, function (playbooksWithRecordObj) {
+                    return playbooksWithRecordObj[prop] === playbooksWithoutRecordObj[prop];
+                });
+                playbooksWithRecordObj ? _.extend(playbooksWithRecordObj, playbooksWithoutRecordObj) : playbooksWithRecord.push(playbooksWithoutRecordObj);
+            });
+        }
 
         function getCollectionPlaybooks() {
             var collectionUUID = $filter('getEndPathName')(config.playbookCollection['@id']);
@@ -78,6 +89,11 @@
         }
 
         function save() {
+            if ($scope.editJsonToGridForm.$invalid) {
+                $scope.editJsonToGridForm.$setTouched();
+                $scope.editJsonToGridForm.$focusOnFirstError();
+                return;
+            }
             $uibModalInstance.close($scope.config);
         }
 
@@ -88,12 +104,12 @@
 
         function addButtonWithoutRecord(playbook) {
             $scope.config.selectedPlaybooksWithoutRecord.push(playbook);
-          	$scope.playbookList.push(playbook);
+            $scope.playbookList.push(playbook);
         }
 
         function addButtonWithRecord(playbook) {
             $scope.config.selectedPlaybooksWithRecord.push(playbook);
-          	$scope.playbookList.push(playbook);
+            $scope.playbookList.push(playbook);
         }
 
         function removeButton(index) {
