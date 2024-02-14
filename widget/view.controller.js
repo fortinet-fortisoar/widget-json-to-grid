@@ -44,18 +44,25 @@
           disabled: false,
           hide: false
         };
-        var isWizardExecution = _.some($scope.config.selectedExecutionWizardPlaybooks, function(f) {
-       return f.uuid == playbook.uuid;
- });
+        var isWizardExecution = _.some($scope.config.selectedExecutionWizardPlaybooks, function (f) {
+          return f.uuid == playbook.uuid;
+        });
+        var wizardName = ($scope.config.widgetName).replace(/ /g, "+");
+        $resource(API.QUERY + 'solutionpacks?$search=' + wizardName).save().$promise.then(function (response) {
+          if (response['hydra:member'] && response['hydra:member'].length > 0) {
+            $scope.widgetVersion = response['hydra:member'][0].version;
+            $scope.widgetAPIName = response['hydra:member'][0].name;
+          }
+        });
         if (playbookButtonWithoutRecordObject) {
           button.onClick = function () {
-            if ($scope.config.showExecutionProgress && !isWizardExecution) {
+            if ($scope.config.showExecutionProgress && isWizardExecution) {
               var selectedRows = $scope.getSelectedRows();
               var payload = {
                 "playbookDetails": playbook,
                 "selectedRecord": selectedRows
               };
-              widgetService.launchStandaloneWidget($scope.config.widgetName, $scope.config.widgetVersion, null, null, payload).then(function () {
+              widgetService.launchStandaloneWidget($scope.widgetAPIName, $scope.widgetVersion, null, null, payload).then(function () {
                 angular.noop;
               });
               $scope.loadProcessing = false;
@@ -72,13 +79,13 @@
 
         if (playbookButtonWithRecordObject) {
           button.onClick = function () {
-            if ($scope.config.showExecutionProgress && !isWizardExecution) {
+            if ($scope.config.showExecutionProgress && isWizardExecution) {
               var selectedRows = $scope.getSelectedRows();
               var payload = {
                 "playbookDetails": playbook,
                 "selectedRecord": selectedRows
               };
-              widgetService.launchStandaloneWidget($scope.config.widgetName, $scope.config.widgetVersion, null, null, payload).then(function () {
+              widgetService.launchStandaloneWidget($scope.widgetAPIName, $scope.widgetVersion, null, null, payload).then(function () {
                 angular.noop;
               });
               $scope.gridApi.selection.clearSelectedRows();
@@ -322,15 +329,15 @@
                 if (data.status === 'finished' && data.result) {
                   $scope.gridOptions.data = data.result.grid_data;
                   $scope.columnDefs = data.result.grid_columns.columns;
-                  if(data.result.grid_data.length === 0){
-                   $scope.gridPagedCollection = new PagedCollection('dummy_module', null, {}, false, null, $scope.columnDefs);
-                  $scope.gridPagedCollection.data = {
-                                                            '@context': API.API_3_BASE + 'contexts/dummy_module',
-                                                            '@id': API.API_3_BASE + 'dummy_module',
-                                                            '@type': 'hydra:Collection',
-                                                            'hydra:member': [],
-                                                            'hydra:totalItems': 0
-                                                        };
+                  if (data.result.grid_data.length === 0) {
+                    $scope.gridPagedCollection = new PagedCollection('dummy_module', null, {}, false, null, $scope.columnDefs);
+                    $scope.gridPagedCollection.data = {
+                      '@context': API.API_3_BASE + 'contexts/dummy_module',
+                      '@id': API.API_3_BASE + 'dummy_module',
+                      '@type': 'hydra:Collection',
+                      'hydra:member': [],
+                      'hydra:totalItems': 0
+                    };
                   }
                   $scope.loadProcessing = false;
                   $scope.refreshProcessing = false;
