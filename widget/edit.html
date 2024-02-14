@@ -57,11 +57,11 @@
                                 <div class="form-group margin-bottom-0">
                                     <label class="control-label">JSON Data Provider Playbook<span
                                             class="text-danger">*</span></label>
-                                    <select name="selectedPlaybook" id="selectedPlaybook" class="form-control" required
+                                    <select name="selectedPlaybook" id="selectedPlaybook" class="form-control"
                                         data-ng-model="selectedPlaybook"
                                         data-ng-options="playbook.name for playbook in playbookData"
                                         data-ng-change="addButton(selectedPlaybook)"
-                                        data-ng-disabled="config.actionButtons.length > 0">
+                                        data-ng-disabled="config.actionButtons.length > 0" data-ng-required="config.actionButtons.length === 0">
                                         <option value="">Select a Playbook</option>
                                     </select>
                                     <span class="fa fa-sort-desc"></span>
