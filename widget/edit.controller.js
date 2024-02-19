@@ -56,16 +56,6 @@
 
         function playbookButton() {
             $scope.playbookList = angular.copy($scope.config.selectedPlaybooksWithRecord);
-            _mergeByProperty($scope.playbookList, $scope.config.selectedPlaybooksWithoutRecord, 'id');
-        }
-
-        function _mergeByProperty(playbooksWithRecord, playbooksWithoutRecord, prop) {
-            _.each(playbooksWithoutRecord, function (playbooksWithoutRecordObj) {
-                var playbooksWithRecordObj = _.find(playbooksWithRecord, function (playbooksWithRecordObj) {
-                    return playbooksWithRecordObj[prop] === playbooksWithoutRecordObj[prop];
-                });
-                playbooksWithRecordObj ? _.extend(playbooksWithRecordObj, playbooksWithoutRecordObj) : playbooksWithRecord.push(playbooksWithoutRecordObj);
-            });
         }
 
         function getCollectionPlaybooks() {
@@ -98,8 +88,10 @@
         }
 
         function addButton(playbook) {
-            $scope.config.actionButtons.push(playbook);
-            $scope.selectedPlaybook = '';
+            if (playbook) {
+                $scope.config.actionButtons.push(playbook);
+                $scope.selectedPlaybook = '';
+            }
         }
 
         function addButtonWithoutRecord(playbook) {
