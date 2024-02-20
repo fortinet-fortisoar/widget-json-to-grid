@@ -35,6 +35,23 @@
         $scope.removeButton = removeButton;
         $scope.removeButtonWithRecord = removeButtonWithRecord;
         $scope.removeButtonWithoutRecord = removeButtonWithoutRecord;
+        $scope.resetButtonWithoutRecord = resetButtonWithoutRecord;
+        $scope.resetButtonWithRecord = resetButtonWithRecord;
+
+        function resetButtonWithoutRecord() {
+            if ($scope.config.showButtonWithoutRecord === false) {
+                $scope.config.selectedPlaybooksWithoutRecord = [];
+            }
+        }
+
+        function resetButtonWithRecord() {
+            if ($scope.config.showButtonWithRecord === false) {
+                $scope.config.selectedPlaybooksWithRecord = [];
+                $scope.playbookList = [];
+                $scope.config.selectedExecutionWizardPlaybooks = [];
+                $scope.config.showExecutionProgress = false;
+            }
+        }
 
         function changedCollection() {
             $scope.config.actionButtons = [];

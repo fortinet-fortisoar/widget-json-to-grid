@@ -97,7 +97,8 @@
                                     <label for="showButtonWithoutRecord" class="control-label">
                                         <input id="showButtonWithoutRecord" type="checkbox"
                                             name="showButtonWithoutRecord"
-                                            data-ng-model="config.showButtonWithoutRecord">
+                                            data-ng-model="config.showButtonWithoutRecord"
+                                            data-ng-click="resetButtonWithoutRecord()">
                                         <span class="display-inline-block margin-top-1">Action Buttons (No Record
                                             Selection)</span>
                                     </label>
@@ -119,7 +120,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-8">
+                        <div data-ng-if="config.showButtonWithoutRecord" class="col-md-8">
                             <ul id="action-editor-without-record"
                                 class="list-group margin-top-md clearfix margin-bottom-0" data-as-sortable
                                 data-ng-model="config.selectedPlaybooksWithoutRecord" data-ng-show="playbookData">
@@ -146,7 +147,8 @@
                                 <div class="checkbox-inline">
                                     <label for="showButtonWithRecord" class="control-label">
                                         <input id="showButtonWithRecord" type="checkbox" name="showButtonWithoutRecord"
-                                            data-ng-model="config.showButtonWithRecord">
+                                            data-ng-model="config.showButtonWithRecord"
+                                            data-ng-click="resetButtonWithRecord()">
                                         <span class="display-inline-block margin-top-1">Action Buttons (With Record
                                             Selection)</span>
                                     </label>
@@ -168,7 +170,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-8 margin-left-18">
+                        <div data-ng-if="config.showButtonWithRecord" class="col-md-8 margin-left-18">
                             <ul id="action-editor-with-record" class="list-group margin-top-md clearfix margin-bottom-0"
                                 data-as-sortable data-ng-model="config.selectedPlaybooksWithRecord"
                                 data-ng-show="playbookData">
