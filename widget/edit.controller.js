@@ -35,6 +35,23 @@
         $scope.removeButton = removeButton;
         $scope.removeButtonWithRecord = removeButtonWithRecord;
         $scope.removeButtonWithoutRecord = removeButtonWithoutRecord;
+        $scope.resetButtonWithoutRecord = resetButtonWithoutRecord;
+        $scope.resetButtonWithRecord = resetButtonWithRecord;
+
+        function resetButtonWithoutRecord() {
+            if ($scope.config.showButtonWithoutRecord === false) {
+                $scope.config.selectedPlaybooksWithoutRecord = [];
+            }
+        }
+
+        function resetButtonWithRecord() {
+            if ($scope.config.showButtonWithRecord === false) {
+                $scope.config.selectedPlaybooksWithRecord = [];
+                $scope.playbookList = [];
+                $scope.config.selectedExecutionWizardPlaybooks = [];
+                $scope.config.showExecutionProgress = false;
+            }
+        }
 
         function changedCollection() {
             $scope.config.actionButtons = [];
@@ -56,16 +73,6 @@
 
         function playbookButton() {
             $scope.playbookList = angular.copy($scope.config.selectedPlaybooksWithRecord);
-            _mergeByProperty($scope.playbookList, $scope.config.selectedPlaybooksWithoutRecord, 'id');
-        }
-
-        function _mergeByProperty(playbooksWithRecord, playbooksWithoutRecord, prop) {
-            _.each(playbooksWithoutRecord, function (playbooksWithoutRecordObj) {
-                var playbooksWithRecordObj = _.find(playbooksWithRecord, function (playbooksWithRecordObj) {
-                    return playbooksWithRecordObj[prop] === playbooksWithoutRecordObj[prop];
-                });
-                playbooksWithRecordObj ? _.extend(playbooksWithRecordObj, playbooksWithoutRecordObj) : playbooksWithRecord.push(playbooksWithoutRecordObj);
-            });
         }
 
         function getCollectionPlaybooks() {
@@ -98,8 +105,10 @@
         }
 
         function addButton(playbook) {
-            $scope.config.actionButtons.push(playbook);
-            $scope.selectedPlaybook = '';
+            if (playbook) {
+                $scope.config.actionButtons.push(playbook);
+                $scope.selectedPlaybook = '';
+            }
         }
 
         function addButtonWithoutRecord(playbook) {

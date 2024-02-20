@@ -56,21 +56,7 @@
         });
         if (playbookButtonWithoutRecordObject) {
           button.onClick = function () {
-            if ($scope.config.showExecutionProgress && isWizardExecution) {
-              var selectedRows = $scope.getSelectedRows();
-              var payload = {
-                "playbookDetails": playbook,
-                "selectedRecord": selectedRows
-              };
-              widgetService.launchStandaloneWidget($scope.widgetAPIName, $scope.widgetVersion, null, null, payload).then(function () {
-                angular.noop;
-              });
-              $scope.loadProcessing = false;
-              $scope.refreshProcessing = false;
-            }
-            else {
-              executeGridPlaybook(playbook, false);
-            }
+            executeGridPlaybook(playbook, false);
           },
             button.iconClass = playbookButtonWithoutRecordObject.icon || 'icon icon-execute';
           buttons.push(button);
