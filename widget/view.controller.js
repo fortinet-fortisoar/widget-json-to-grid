@@ -8,12 +8,12 @@
     .module('cybersponse')
     .controller('jsonToGrid110Ctrl', jsonToGrid110Ctrl);
 
-  jsonToGrid110Ctrl.$inject = ['$scope', '$resource', 'API', 'playbookService', '$q', 'toaster', 'Entity', '$filter', 'Modules', '_', 'exportService', 'currentPermissionsService', 'FIXED_MODULE', 'statusCodeService', '$uibModal', 'widgetService', 'PagedCollection'];
+  jsonToGrid110Ctrl.$inject = ['$scope', '$resource', 'API', 'playbookService', '$q', 'toaster', 'Entity', '$filter', 'Modules', '_', 'exportService', 'currentPermissionsService', 'FIXED_MODULE', 'statusCodeService', '$uibModal', 'widgetService', 'PagedCollection', 'widgetBasePath'];
 
-
-  function jsonToGrid110Ctrl($scope, $resource, API, playbookService, $q, toaster, Entity, $filter, Modules, _, exportService, currentPermissionsService, FIXED_MODULE, statusCodeService, $uibModal, widgetService, PagedCollection) {
+  function jsonToGrid110Ctrl($scope, $resource, API, playbookService, $q, toaster, Entity, $filter, Modules, _, exportService, currentPermissionsService, FIXED_MODULE, statusCodeService, $uibModal, widgetService, PagedCollection, widgetBasePath) {
     $scope.executeGridPlaybook = executeGridPlaybook;
     $scope.refreshGridData = refreshGridData;
+    $scope.widgetBasePath = widgetBasePath;
     var selectButtons = [];
     var buttons = [];
 
@@ -85,6 +85,7 @@
           $scope.gridOptions.csOptions.selectButtons = selectButtons;
         }
 
+
       });
     }
 
@@ -103,7 +104,7 @@
           selectButtons: selectButtons,
           noResultsMessage: 'No change requests available.',
         },
-        expandableRowTemplate: 'widgets/installed/jsonToGrid-1.1.0/widgetAssets/html/rowExpandable.html',
+        expandableRowTemplate: $scope.widgetBasePath + 'widgetAssets/html/rowExpandable.html',
         enableExpandable: true,
         enableFiltering: false,
         enableSelectAll: true,
@@ -142,7 +143,7 @@
             _playbookButtonsExecution(playbook, executeWithRecord, triggerStep, entity);
           } else if (triggerStep.arguments.inputVariables && triggerStep.arguments.inputVariables.length > 0) {
             var modalInstance = $uibModal.open({
-              templateUrl: 'widgets/installed/jsonToGrid-1.1.0/widgetAssets/html/inputVariables.html',
+              templateUrl: $scope.widgetBasePath + 'widgetAssets/html/inputVariables.html',
               controller: 'InputVariablesCtrl',
               backdrop: 'static',
               resolve: {
@@ -192,9 +193,15 @@
         $scope.gridApi.selection.clearSelectedRows();
       } else {
         $resource(API.BASE + API.WORKFLOWS + playbook.uuid).get({ '$relationships': true }).$promise.then(function (playbook) {
-          playbookService.triggerPlaybookAction(playbook, $scope.getSelectedRows, $scope, true, entity);
-          $scope.loadProcessing = false;
-          $scope.refreshProcessing = false;
+          var triggerStep = playbookService.getTriggerStep(playbook);
+          var inputVariables = manualTriggerInput ? manualTriggerInput.inputVariables : {};
+          _sendPost(triggerStep.arguments.route, playbook, inputVariables, $scope.getSelectedRows, $scope, true, entity.name, false).then(function (data) {
+            $scope.loadProcessing = false;
+            $scope.refreshProcessing = false;
+            if (data.status === 'finished') {
+              $scope.refreshGridData();
+            }
+          });
         });
       }
     }
@@ -203,7 +210,7 @@
       $scope.loadProcessing = true;
       $scope.refreshProcessing = false;
       loadGriOptions();
-      triggerPlaybook($scope.config.actionButtons[0].uuid, false);
+      triggerPlaybook($scope.config.actionButtons[0].uuid, true);
     }
 
     function triggerPlaybook(uuid, refreshGrid) {
@@ -239,6 +246,7 @@
         };
       }
       if (!triggerStep.arguments.inputVariables || !triggerStep.arguments.inputVariables.length) {
+        $scope.loadProcessing = true;
         _sendPost(triggerStep.arguments.route, playbook, playbookExeOption, getSelectedRows, scope, isSync, entity.name, refreshGrid).then(function () {
           defer.resolve();
         }, function () {
@@ -248,7 +256,7 @@
       }
 
       var modalInstance = $uibModal.open({
-        templateUrl: 'widgets/installed/jsonToGrid-1.1.0/widgetAssets/html/inputVariables.html',
+        templateUrl: $scope.widgetBasePath + 'widgetAssets/html/inputVariables.html',
         controller: 'InputVariablesCtrl',
         backdrop: 'static',
         resolve: {
@@ -268,6 +276,7 @@
 
       modalInstance.result.then(function (result) {
         var inputVariables = angular.extend(result.inputVariables, playbookExeOption);
+        $scope.loadProcessing = true;
         _sendPost(triggerStep.arguments.route, playbook, inputVariables, getSelectedRows, scope, isSync, entity.name, refreshGrid).then(function () {
           defer.resolve();
         }, function () {
@@ -280,7 +289,6 @@
 
     function _sendPost(route, playbook, inputVariables, getSelectedRows, scope, isSync, moduleName, refreshGrid) {
       var defer = $q.defer();
-      $scope.loadProcessing = !refreshGrid;
       $scope.refreshProcessing = refreshGrid;
       var workflowsReadPermission = currentPermissionsService.availablePermission(FIXED_MODULE.PLAYBOOK, 'read');
       var data = getSelectedRows();
@@ -313,21 +321,31 @@
             playbookService.getExecutedPlaybookLogData(result.instance_ids).then(function (data) {
               if (data.status) {
                 if (data.status === 'finished' && data.result) {
-                  $scope.gridOptions.data = data.result.grid_data;
-                  $scope.columnDefs = data.result.grid_columns.columns;
-                  if (data.result.grid_data.length === 0) {
-                    $scope.gridPagedCollection = new PagedCollection('dummy_module', null, {}, false, null, $scope.columnDefs);
-                    $scope.gridPagedCollection.data = {
-                      '@context': API.API_3_BASE + 'contexts/dummy_module',
-                      '@id': API.API_3_BASE + 'dummy_module',
-                      '@type': 'hydra:Collection',
-                      'hydra:member': [],
-                      'hydra:totalItems': 0
-                    };
+                  if (refreshGrid) {
+                    $scope.gridOptions.data = data.result.grid_data;
+                    $scope.columnDefs = data.result.grid_columns.columns;
+                    if (data.result.grid_data.length === 0) {
+                      $scope.gridPagedCollection = new PagedCollection('dummy_module', null, {}, false, null, $scope.columnDefs);
+                      $scope.gridPagedCollection.data = {
+                        '@context': API.API_3_BASE + 'contexts/dummy_module',
+                        '@id': API.API_3_BASE + 'dummy_module',
+                        '@type': 'hydra:Collection',
+                        'hydra:member': [],
+                        'hydra:totalItems': 0
+                      };
+                    }
                   }
                   $scope.loadProcessing = false;
                   $scope.refreshProcessing = false;
-                  defer.resolve();
+                  defer.resolve(data);
+                }
+                else if (data.status === 'failed') {
+                  $scope.loadProcessing = false;
+                  $scope.refreshProcessing = false;
+                  toaster.warning({
+                    body: 'Not able to fetch the status of the triggered playbook "'
+                  });
+                  defer.resolve(data);
                 }
               }
             }, statusCodeService);
