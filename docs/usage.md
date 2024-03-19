@@ -3,44 +3,77 @@
 
 # Usage
 
-The JSON to Grid widget helps render the JSON list result returned from the `JSON Data Provider Playbook` in the grid view.
-
-Following pointers showcase how this widget seamlessly integrates with a solution pack such as **Continuous Delivery**:
-
-- Execute the playbook with `No Record Selection` and `With Record Selection` on grid data.
-
-- Add this view on a list view or detail view of a module's record.
+The JSON to Grid widget helps render the JSON list result returned from the **JSON Data Provider** Playbook in a grid view. It also has the option to add playbooks as action buttons.
 
 ## Features
 
-- Helps users configure the widget by choosing *Title*, *Playbook Collection*, *Playbooks*, and *Icons*
+- Configure the widget by choosing *Title*, *Playbook Collection*, *Playbooks*, and *Icons*
 
-- Helps users visualize the JSON data result from the playbook specified under the `JSON Data Provider Playbook` field
+- Visualize the JSON data result from the playbook specified under the `JSON Data Provider Playbook` field
 
-- Helps users execute the playbook on `No Record Selection` and `With Record Selection` on grid data
+- Execute the playbooks either when **_no records are selected_** or when one or more **_records are selected_** on grid data
 
-    >**NOTE**: Ensure that `JSON Data Provider Playbook` should returns two variables 
-    >
-    >    1. `grid_data`: Contain the list of JSON data that you want to render on grid view. Every record should have a unique IRI(`@id`) field.
-    >    
-    >    2. `grid_columns`: Map `grid_data` variable fields with the column fields of the grid.
+    <table>
+        <tr>
+            <th>NOTE</th>
+        </tr>
+        <tr>
+            <td>The playbook <em>JSON Data Provider</em> must return <strong>two</strong> variables:
+                <ol>
+                    <li><code>grid_data</code>: Contains the list of JSON data to render on grid view. Every record should have a unique IRI (<code>@id</code>) field.</li>
+                    <li><code>grid_columns</code>: Map <code>grid_data</code> variable fields with the column fields of the grid.</li>
+                </ol>
+            </td>
+        </tr>
+    </table>
 
-- The following screenshot shows sample contents of the `grid_data` and `grid_columns` variable
+## Configuring JSON to Grid Widget
 
-    ![](./res/playbook_output.png)
+In this section, we use *Continuos Delivery* solution pack as an example for configuring the **JSON to Grid** widget.
 
-## Scenario
+1. Edit a module's view template and select the **Add Widget** button.
 
-- Download [Sample - JSON to Grid](./res/Sample%20-%20JSON%20to%20Grid.zip) playbook and import into FortiSOAR server.
+2. Select **JSON to Grid** from the list of installed widgets.
 
-- Add JSON to Grid widget to the list view of any module.
+3. Specify a title of the widget in the **Title** field.
 
-- Configure the widget by selecting `Playbook Collection` as **Sample - JSON to Grid** and `JSON Data Provider Playbook` as **JSON to Grid** playbook.
+    ![Title field](./res/edit-view-00.png)
+
+4. Select the playbook collection containing the playbooks to execute. This collection must also contain the playbooks to be executed as action buttons.
+
+    As an example, select the collection **02 - Use Case - CICD**.
+
+    ![Playbook collection](./res/edit-view-01.png)
+
+5. Select the playbook that returns the JSON data to be rendered in the grid view.
+
+    ![Playbook containing JSON data](./res/edit-view-03.png)
+
+6. Select the checkbox **Action Buttons (No Record Selection)**
+
+    - Select playbooks to be executed when no records are selected.
+
+        ![Select Playbooks run when no records are selected](./res/edit-view-04.png)
+
+7. Select the checkbox **Action Buttons (With Record Selection)**
+
+    - Select playbooks to be executed when one or more records are selected.
+
+        ![Select playbooks to run after selecting records](./res/edit-view-05.png)
+
+8. Select the playbooks whose execution progress is to be displayed by the wizard.
+
+    ![View playbooks execution in playbook execution wizard](./res/edit-view-06.png)
+
+>You can download this [Sample - JSON to Grid (ZIPPED)](./res/Sample-JSON-to-grid.zip) collection and import using the FortiSOAR&trade;'s import wizard to try out this widget. **_The ZIP file contains a playbook that generates a sample grid data._**
 
 ## JSON to Grid Widget Views
 
-### JSON to Grid Widget - Edit View
-![](./res/edit_view.png)
+| ![JSON to Grid widget with no record selected](./res/json-to-grid-no-record-selected.png) | ![JSON to Grid widget with a record selected](./res/json-to-grid-record-selected.png) |
+|:----------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------:|
+|                          JSON to Grid widget with no record selected                           |                         JSON to Grid widget with a record selected                         |
 
-### JSON to Grid Widget - List View
-![](./res/list_view.png)
+## Next Steps
+
+| [Installation](./setup.md#installation) | [Configuration](./setup.md#configuration) |
+|-----------------------------------------|-------------------------------------------|
