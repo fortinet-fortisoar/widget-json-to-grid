@@ -7,8 +7,8 @@
     "metadata": {
         "description": "Render the json playbook result in grid view and also perform various operation on the grid",
         "snapshots": [
-            "https:\/\/repo.fortisoar.fortinet.com\/widgets\/jsonToGrid-1.1.0\/images\/json-to-grid-edit.png",
             "https:\/\/repo.fortisoar.fortinet.com\/widgets\/jsonToGrid-1.1.0\/images\/json-to-grid-view.png"
+            "https:\/\/repo.fortisoar.fortinet.com\/widgets\/jsonToGrid-1.1.0\/images\/json-to-grid-edit.png"
         ],
         "pages": [
             "View Panel",
