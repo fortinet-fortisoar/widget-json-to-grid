@@ -61,9 +61,17 @@ In this section, we use *Continuos Delivery* solution pack as an example for con
 
         ![Select playbooks to run after selecting records](./res/edit-view-05.png)
 
-8. Select the playbooks whose execution progress is to be displayed by the wizard.
+8. Select the playbooks whose execution progress is to be displayed by the playbook execution wizard. Install **Playbook Execution Wizard** to view playbooks' execution progress.
 
     ![View playbooks execution in playbook execution wizard](./res/edit-view-06.png)
+
+9. Specify the widget to launch when displaying the playbook execution progress under **Advanced Settings**. Currently, only **Playbook Execution Wizard** is supported in this field.
+
+    ![Widget to display playbook execution](./res/edit-view-07.png)
+
+    The following screen shows the playbook execution wizard about to show the playbook execution progress.
+
+    ![Playbook Execution Wizard Screen](./res/playbook-execution-wizard.png)
 
 >You can download this [Sample - JSON to Grid (ZIPPED)](./res/Sample-JSON-to-grid.zip) collection and import using the FortiSOAR&trade;'s import wizard to try out this widget. **_The ZIP file contains a playbook that generates a sample grid data._**
 
