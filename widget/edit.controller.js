@@ -37,6 +37,11 @@
         $scope.removeButtonWithoutRecord = removeButtonWithoutRecord;
         $scope.resetButtonWithoutRecord = resetButtonWithoutRecord;
         $scope.resetButtonWithRecord = resetButtonWithRecord;
+        $scope.toggleAdvancedSettings = toggleAdvancedSettings;
+        
+        function toggleAdvancedSettings() {
+            $scope.toggle = !$scope.toggle;
+          }
 
         function resetButtonWithoutRecord() {
             if ($scope.config.showButtonWithoutRecord === false) {
