@@ -47,6 +47,18 @@ The configuration settings of the JSON to Grid widget provide the following deta
         <td>Action Buttons (With Record Selection)</td>
         <td>Select playbooks that become available as buttons when one or more records are selected.</td>
     </tr>
+    <tr>
+        <td> Show playbook execution progress on wizard </td>
+        <td>Select playbooks that become available as buttons when one or more records are selected.</td>
+    </tr>
+    <tr>
+        <td>Playbook included list (With Record Selection)</td>
+        <td>Select the list of playbook whose execution is to be displayed in the playbook execution wizard.</td>
+    </tr>
+    <tr>
+        <td>Advanced Setting</td>
+        <td>Specify the widget to launch when displaying the playbook execution progress. Currently, only <strong>Playbook Execution Wizard</strong> is supported in this field.</td>
+    </tr>
 </table>
 
 ## Next Steps
