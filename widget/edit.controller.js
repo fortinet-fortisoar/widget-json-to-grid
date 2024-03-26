@@ -1,15 +1,24 @@
+/* Copyright start
+  MIT License
+  Copyright (c) 2024 Fortinet Inc
+  Copyright end */
 'use strict';
 (function () {
     angular
         .module('cybersponse')
-        .controller('editJsonToGrid100Ctrl', editJsonToGrid100Ctrl);
+        .controller('editJsonToGrid110Ctrl', editJsonToGrid110Ctrl);
 
-    editJsonToGrid100Ctrl.$inject = ['$scope', '$resource', 'API', '$uibModalInstance', 'config', 'playbookService', 'statusCodeService', 'Field', '$filter'];
+    editJsonToGrid110Ctrl.$inject = ['$scope', '$resource', 'API', '$uibModalInstance', 'config', 'Field', '$filter', '_'];
 
-    function editJsonToGrid100Ctrl($scope, $resource, API, $uibModalInstance, config, playbookService, statusCodeService, Field, $filter) {
+    function editJsonToGrid110Ctrl($scope, $resource, API, $uibModalInstance, config, Field, $filter, _) {
         $scope.cancel = cancel;
         $scope.save = save;
         $scope.config = config;
+        $scope.config.widgetName = 'Playbook Execution Wizard';
+        $scope.playbookList = [];
+        $scope.playbookButton = playbookButton;
+        $scope.playbookData = [];
+        $scope.showExecutionProgressCheckbox = showExecutionProgressCheckbox;
         if (!$scope.config.actionButtons) {
             $scope.config.actionButtons = [];
         }
@@ -26,14 +35,49 @@
         $scope.removeButton = removeButton;
         $scope.removeButtonWithRecord = removeButtonWithRecord;
         $scope.removeButtonWithoutRecord = removeButtonWithoutRecord;
-        $scope.config.selectedPlaybooks = [];
+        $scope.resetButtonWithoutRecord = resetButtonWithoutRecord;
+        $scope.resetButtonWithRecord = resetButtonWithRecord;
+        $scope.toggleAdvancedSettings = toggleAdvancedSettings;
+        
+        function toggleAdvancedSettings() {
+            $scope.toggle = !$scope.toggle;
+          }
+
+        function resetButtonWithoutRecord() {
+            if ($scope.config.showButtonWithoutRecord === false) {
+                $scope.config.selectedPlaybooksWithoutRecord = [];
+            }
+        }
+
+        function resetButtonWithRecord() {
+            if ($scope.config.showButtonWithRecord === false) {
+                $scope.config.selectedPlaybooksWithRecord = [];
+                $scope.playbookList = [];
+                $scope.config.selectedExecutionWizardPlaybooks = [];
+                $scope.config.showExecutionProgress = false;
+            }
+        }
 
         function changedCollection() {
-            $scope.config.selectedPlaybooks = [];
             $scope.config.actionButtons = [];
+            $scope.playbookData = [];
             $scope.config.selectedPlaybooksWithoutRecord = [];
             $scope.config.selectedPlaybooksWithRecord = [];
+            $scope.playbookList = [];
             getCollectionPlaybooks();
+        }
+
+        function showExecutionProgressCheckbox() {
+            if ($scope.config.showButton) {
+                $scope.config.selectedPlaybooksWithoutRecord = [];
+                $scope.config.selectedPlaybooksWithRecord = [];
+                $scope.playbookData = [];
+                $scope.playbookList = [];
+            }
+        }
+
+        function playbookButton() {
+            $scope.playbookList = angular.copy($scope.config.selectedPlaybooksWithRecord);
         }
 
         function getCollectionPlaybooks() {
@@ -51,37 +95,49 @@
 
             });
         }
+
         function cancel() {
             $uibModalInstance.dismiss('cancel');
         }
 
         function save() {
+            if ($scope.editJsonToGridForm.$invalid) {
+                $scope.editJsonToGridForm.$setTouched();
+                $scope.editJsonToGridForm.$focusOnFirstError();
+                return;
+            }
             $uibModalInstance.close($scope.config);
         }
 
         function addButton(playbook) {
-            $scope.config.actionButtons.push(playbook);
-            $scope.selectedPlaybook = '';
+            if (playbook) {
+                $scope.config.actionButtons.push(playbook);
+                $scope.selectedPlaybook = '';
+            }
         }
 
         function addButtonWithoutRecord(playbook) {
             $scope.config.selectedPlaybooksWithoutRecord.push(playbook);
+            $scope.playbookList.push(playbook);
         }
 
         function addButtonWithRecord(playbook) {
             $scope.config.selectedPlaybooksWithRecord.push(playbook);
+            $scope.playbookList.push(playbook);
         }
 
         function removeButton(index) {
             $scope.config.actionButtons.splice(index, 1);
         }
 
-        function removeButtonWithRecord(index) {
+        function removeButtonWithRecord(index, action) {
             $scope.config.selectedPlaybooksWithRecord.splice(index, 1);
+            $scope.config.selectedExecutionWizardPlaybooks = _.reject($scope.config.selectedExecutionWizardPlaybooks, obj => obj.id === action.id);
         }
 
-        function removeButtonWithoutRecord(index) {
+        function removeButtonWithoutRecord(index, action) {
             $scope.config.selectedPlaybooksWithoutRecord.splice(index, 1);
+            $scope.config.selectedExecutionWizardPlaybooks = _.reject($scope.config.selectedExecutionWizardPlaybooks, obj => obj.id === action.id);
         }
 
         function _init() {

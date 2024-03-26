@@ -1,3 +1,7 @@
+<!-- Copyright start
+  MIT License
+  Copyright (c) 2024 Fortinet Inc
+  Copyright end -->
 <form data-ng-submit="save()" class="noMargin" name="editJsonToGridForm" novalidate>
     <div class="modal-header">
         <h3 class="modal-title col-md-9">Edit JSON To Grid</h3>
@@ -9,137 +13,250 @@
     <div class="modal-body">
         <div class="typehead-field" name="userForm">
             <h8>Converts a given JSON input to an actionable Grid visualization</h8>
-            <div class="row margin-bottom-sm">
-                <div class="col-md-12">
-                    <div class="form-group margin-bottom-0">
-                        <label for="title" class="control-label margin-top-sm">Title<span
-                                class="text-danger">*</span></label>
-                        <input id="title" name="title" type="text" class="form-control" data-ng-model="config.title">
-                    </div>
-                    <div data-cs-messages="editJsonToGridForm.resourcefields"></div>
-                </div>
-            </div>
-            <div class="row margin-bottom-sm">
-                <div class="col-md-12">
-                    <div class="form-group margin-bottom-0">
-                        <label for="resourcefields" class="control-label margin-top-sm">Playbook Collection<span
-                                class="text-danger">*</span></label>
-                        <span
-                            data-uib-tooltip="Select the playbook collection which contains the JSON data provider and action button playbooks"
-                            data-tooltip-append-to-body="true">
-                            <i class="margin-left-sm icon icon-information font-Size-13"></i>
-                        </span>
-                        <div data-cs-typeahead="getWorkflowCollectionsField"
-                            data-placeholder="'Select Playbook Collection'" data-ng-model="config.playbookCollection"
-                            data-form-name="'variableForm'" class="width-100pt" data-change-method="changedCollection">
-                        </div>
-                    </div>
-                    <div data-cs-messages="editJsonToGridForm.resourcefields"></div>
-                </div>
-            </div>
-            <div class="row margin-bottom-sm">
-                <div class="col-md-12">
-                    <div class="form-group margin-bottom-0">
-                        <label class="control-label">JSON Data Provider Playbook<span
-                                class="text-danger">*</span></label>
-                        <div class="cs-select">
-                            <select name="selectedPlaybook" id="selectedPlaybook" class="form-control"
-                                data-ng-model="selectedPlaybook"
-                                data-ng-options="playbook.name for playbook in playbookData"
-                                data-ng-change="addButton(selectedPlaybook)"
-                                data-ng-disabled="config.actionButtons.length > 0">
-                                <option value="">Select a Playbook</option>
-                            </select>
-                            <span class="fa fa-sort-desc"></span>
-                        </div>
-                    </div>
-                    <ul id="jsonDataProviderPlaybook" class="list-group margin-top-md clearfix margin-bottom-0"
-                        data-as-sortable data-ng-model="config.actionButtons" data-ng-show="playbookData">
-                        <li id="draggable-item-all{{$index}}" class="column-editor-block margin-bottom-sm"
-                            data-ng-repeat="action in config.actionButtons" data-as-sortable-item>
-                            <div cs-icons data-ng-model="action.icon">
+            <div class="form-group dashed-border-section" style="position:relative;">
+                <div style="padding: 12px;">
+                    <div class="row margin-bottom-sm">
+                        <div class="col-md-8">
+                            <div class="form-group margin-bottom-0"
+                                data-ng-class="{ 'has-error': editJsonToGridForm.title.$invalid && editJsonToGridForm.title.$touched }">
+                                <label for="title" class="control-label margin-top-sm">Title<span
+                                        class="text-danger">*</span></label>
+                                <input id="title" name="title" type="text" class="form-control"
+                                    data-ng-model="config.title" required>
                             </div>
-                            <div data-as-sortable-item-handle class="column-editor-text" title="{{ action.name }}">
-                                {{action.name}}</div>
-                            <span class="icon icon-close text-danger pull-right margin-top-sm"
-                                data-ng-click="removeButton($index)"></span>
-                        </li>
-                    </ul>
+                            <div data-cs-messages="editJsonToGridForm.resourcefields"></div>
+                        </div>
+                    </div>
+                    <div class="row margin-bottom-sm">
+                        <div class="col-md-8">
+                            <div class="form-group margin-bottom-0"
+                                data-ng-class="{'has-error': playbookData.length === 0}">
+                                <label for="resourcefields" class="control-label margin-top-sm">Playbook Collection<span
+                                        class="text-danger">*</span></label>
+                                <span
+                                    data-uib-tooltip="Select the playbook collection which contains the JSON data provider and action button playbooks"
+                                    data-tooltip-append-to-body="true">
+                                    <i class="margin-left-sm icon icon-information font-Size-13"></i>
+                                </span>
+                                <div>
+                                    <div data-cs-typeahead="getWorkflowCollectionsField"
+                                        data-placeholder="'Select Playbook Collection'"
+                                        data-ng-model="config.playbookCollection" data-form-name="'variableForm'"
+                                        class="width-100pt" data-change-method="changedCollection"
+                                        data-ng-required="playbookData.length === 0">
+                                    </div>
+                                </div>
+                            </div>
+                            <div data-cs-messages="editJsonToGridForm.resourcefields"></div>
+                        </div>
+                    </div>
+                    <div class="row margin-bottom-sm">
+                        <div class="col-md-8">
+                            <div class="form-group margin-bottom-0"
+                                data-ng-class="{ 'has-error': editJsonToGridForm.selectedPlaybook.$invalid && editJsonToGridForm.selectedPlaybook.$touched }">
+                                <label class="control-label">JSON Data Provider Playbook<span
+                                        class="text-danger">*</span></label>
+                                <div class="cs-select">
+                                    <select name="selectedPlaybook" id="selectedPlaybook" class="form-control"
+                                        data-ng-model="selectedPlaybook"
+                                        data-ng-options="playbook.name for playbook in playbookData"
+                                        data-ng-change="addButton(selectedPlaybook)"
+                                        data-ng-disabled="config.actionButtons.length > 0"
+                                        data-ng-required="config.actionButtons.length === 0">
+                                        <option value="">Select a Playbook</option>
+                                    </select>
+                                    <span class="fa fa-sort-desc"></span>
+                                </div>
+                            </div>
+                            <ul id="jsonDataProviderPlaybook" class="list-group margin-top-md clearfix margin-bottom-0"
+                                data-as-sortable data-ng-model="config.actionButtons" data-ng-show="playbookData">
+                                <li id="draggable-item-all{{$index}}" class="column-editor-block margin-bottom-sm"
+                                    data-ng-repeat="action in config.actionButtons" data-as-sortable-item>
+                                    <div cs-icons data-ng-model="action.icon">
+                                    </div>
+                                    <div data-as-sortable-item-handle class="column-editor-text"
+                                        title="{{ action.name }}">
+                                        {{action.name}}</div>
+                                    <span class="icon icon-close text-danger pull-right margin-top-sm"
+                                        data-ng-click="removeButton($index)"></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
             <hr>
-            <div class="checkbox-inline">
-                <label for="showButton" class="control-label">
-                    <input id="showButton" type="checkbox" name="showButton" data-ng-model="config.showButton">
-                    <span class="display-inline-block margin-top-1">Enable Grid Action Buttons</span>
-                </label>
-                <span data-uib-tooltip="Ensure the playbooks are in same collection as JSON input playbook"
-                    data-tooltip-append-to-body="true"><i class="margin-left-sm icon icon-information font-Size-13">
-                    </i></span>
-            </div>
-            <div data-ng-if="config.showButton">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group margin-bottom-0">
-                            <label class="control-label padding-top-18px">Action Buttons (No Record Selection)</label>
-                            <select name="select_playbooks_without_record" id="select_playbooks_without_record"
-                                class="form-control" data-ng-model="withRecordPlaybook"
-                                data-ng-options="playbook.name for playbook in playbookData"
-                                data-ng-change="addButtonWithoutRecord(withRecordPlaybook)">
-                                <option value="">Select a Playbook</option>
-                            </select>
+            <div class="form-group dashed-border-section" style="position:relative;">
+                <div style="padding: 12px;">
+                    <h8>Grid Action Buttons</h8>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group margin-bottom-0"
+                                data-ng-class="{ 'has-error': editJsonToGridForm.select_playbooks_without_record.$invalid && editJsonToGridForm.select_playbooks_without_record.$touched }">
+                                <div class="checkbox-inline">
+                                    <label for="showButtonWithoutRecord" class="control-label">
+                                        <input id="showButtonWithoutRecord" type="checkbox"
+                                            name="showButtonWithoutRecord"
+                                            data-ng-model="config.showButtonWithoutRecord"
+                                            data-ng-click="resetButtonWithoutRecord()">
+                                        <span class="display-inline-block margin-top-1">Action Buttons (No Record
+                                            Selection)</span>
+                                    </label>
+                                    <span data-uib-tooltip="Select playbook which will execute with no record selection"
+                                        data-tooltip-append-to-body="true"><i
+                                            class="margin-left-sm icon icon-information font-Size-13">
+                                        </i></span>
+                                </div>
+                                <div data-ng-if="config.showButtonWithoutRecord">
+                                    <select name="select_playbooks_without_record" id="select_playbooks_without_record"
+                                        class="form-control" data-ng-model="withRecordPlaybook"
+                                        data-ng-options="playbook.name for playbook in playbookData"
+                                        data-ng-change="addButtonWithoutRecord(withRecordPlaybook)"
+                                        data-ng-required="config.selectedPlaybooksWithoutRecord.length === 0">
+                                        <option value="">Select a Playbook</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-8">
-                        <ul id="action-editor-without-record" class="list-group margin-top-md clearfix margin-bottom-0"
-                            data-as-sortable data-ng-model="config.selectedPlaybooksWithoutRecord"
-                            data-ng-show="playbookData">
-                            <li id="without-record-draggable-item-all{{$index}}"
-                                class="column-editor-block margin-bottom-sm"
-                                data-ng-repeat="action in config.selectedPlaybooksWithoutRecord" data-as-sortable-item>
-                                <div cs-icons data-ng-model="action.icon">
-                                </div>
-                                <div data-as-sortable-item-handle class="column-editor-text" title="{{ action.name }}">
-                                    {{action.name}}</div>
-                                <span id="removeButtonWithoutRecord_($index)"
-                                    class="icon icon-close text-danger pull-right margin-top-sm"
-                                    data-ng-click="removeButtonWithoutRecord($index)"></span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group margin-bottom-0">
-                            <label class="control-label padding-top-18px">Action Buttons (With Record Selection)</label>
-                            <select name="select_playbooks_with_record" id="select_playbooks_with_record"
-                                class="form-control" data-ng-model="withoutRecordnewPlaybook"
-                                data-ng-options="playbook.name for playbook in playbookData"
-                                data-ng-change="addButtonWithRecord(withoutRecordnewPlaybook)">
-                                <option value="">Select a Playbook</option>
-                            </select>
+                    <div class="row">
+                        <div data-ng-if="config.showButtonWithoutRecord" class="col-md-8">
+                            <ul id="action-editor-without-record"
+                                class="list-group margin-top-md clearfix margin-bottom-0" data-as-sortable
+                                data-ng-model="config.selectedPlaybooksWithoutRecord" data-ng-show="playbookData">
+                                <li id="without-record-draggable-item-all{{$index}}"
+                                    class="column-editor-block margin-bottom-sm"
+                                    data-ng-repeat="action in config.selectedPlaybooksWithoutRecord"
+                                    data-as-sortable-item>
+                                    <div cs-icons data-ng-model="action.icon">
+                                    </div>
+                                    <div data-as-sortable-item-handle class="column-editor-text"
+                                        title="{{ action.name }}">
+                                        {{action.name}}</div>
+                                    <span id="removeButtonWithoutRecord_($index)"
+                                        class="icon icon-close text-danger pull-right margin-top-sm"
+                                        data-ng-click="removeButtonWithoutRecord($index, action)"></span>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-8">
-                        <ul id="action-editor-with-record" class="list-group margin-top-md clearfix margin-bottom-0"
-                            data-as-sortable data-ng-model="config.selectedPlaybooksWithRecord"
-                            data-ng-show="playbookData">
-                            <li id="with-record-draggable-item-all_{{$index}}"
-                                class="column-editor-block margin-bottom-sm"
-                                data-ng-repeat="action in config.selectedPlaybooksWithRecord" data-as-sortable-item>
-                                <div cs-icons data-ng-model="action.icon">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group margin-bottom-0"
+                                data-ng-class="{ 'has-error': editJsonToGridForm.select_playbooks_with_record.$invalid && editJsonToGridForm.select_playbooks_with_record.$touched }">
+                                <div class="checkbox-inline">
+                                    <label for="showButtonWithRecord" class="control-label">
+                                        <input id="showButtonWithRecord" type="checkbox" name="showButtonWithoutRecord"
+                                            data-ng-model="config.showButtonWithRecord"
+                                            data-ng-click="resetButtonWithRecord()">
+                                        <span class="display-inline-block margin-top-1">Action Buttons (With Record
+                                            Selection)</span>
+                                    </label>
+                                    <span data-uib-tooltip="Select playbook which will execute with record selection"
+                                        data-tooltip-append-to-body="true"><i
+                                            class="margin-left-sm icon icon-information font-Size-13">
+                                        </i></span>
                                 </div>
-                                <div data-as-sortable-item-handle class="column-editor-text" title="{{ action.name }}">
-                                    {{action.name}}</div>
-                                <span id="removeButtonWithRecord_($index)"
-                                    class="icon icon-close text-danger pull-right margin-top-sm"
-                                    data-ng-click="removeButtonWithRecord($index)"></span>
-                            </li>
-                        </ul>
+                                <div data-ng-if="config.showButtonWithRecord" class="margin-left-18">
+                                    <select name="select_playbooks_with_record" id="select_playbooks_with_record"
+                                        class="form-control" data-ng-model="withoutRecordPlaybook"
+                                        data-ng-options="playbook.name for playbook in playbookData"
+                                        data-ng-change="addButtonWithRecord(withoutRecordPlaybook)"
+                                        data-ng-required="config.selectedPlaybooksWithRecord.length === 0">
+                                        <option value="">Select a Playbook</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div data-ng-if="config.showButtonWithRecord" class="col-md-8 margin-left-18">
+                            <ul id="action-editor-with-record" class="list-group margin-top-md clearfix margin-bottom-0"
+                                data-as-sortable data-ng-model="config.selectedPlaybooksWithRecord"
+                                data-ng-show="playbookData">
+                                <li id="with-record-draggable-item-all_{{$index}}"
+                                    class="column-editor-block margin-bottom-sm"
+                                    data-ng-repeat="action in config.selectedPlaybooksWithRecord" data-as-sortable-item>
+                                    <div cs-icons data-ng-model="action.icon">
+                                    </div>
+                                    <div data-as-sortable-item-handle class="column-editor-text"
+                                        title="{{ action.name }}">
+                                        {{action.name}}</div>
+                                    <span id="removeButtonWithRecord_($index)"
+                                        class="icon icon-close text-danger pull-right margin-top-sm"
+                                        data-ng-click="removeButtonWithRecord($index, action)"></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div data-ng-if="config.showButtonWithRecord"
+                        class="panel-body panel-default solid-border margin-left-18">
+                        <div class="checkbox-inline margin-top-sm">
+                            <label for="showExecutionProgress" class="control-label">
+                                <input type="checkbox" id="showExecutionProgress" name="showExecutionProgress"
+                                    data-ng-model="config.showExecutionProgress"
+                                    data-ng-change="checkboxChanged(config.showExecutionProgress)" data-cs-focus />
+
+                                <span class="display-inline-block margin-top-1">Show playbook execution progress on
+                                    wizard</span>
+                            </label>
+                            <span
+                                data-uib-tooltip="By Enabling this option the playbook execution will show on playbook execution wizard"
+                                data-tooltip-append-to-body="true"><i
+                                    class="margin-left-sm icon icon-information font-Size-13">
+                                </i></span>
+                        </div>
+                        <div data-ng-if="config.showExecutionProgress">
+                            <div class="form-group"
+                                data-ng-class="{ 'has-error': editJsonToGridForm.select_playbooks.$invalid && editJsonToGridForm.select_playbooks.$touched }">
+                                <label class="control-label">Playbook included list (With Record
+                                    Selection)</label>
+                                <span data-uib-tooltip="Provide a list of playbook whose
+                                    execution you want to include in the playbook execution wizard"
+                                    data-tooltip-append-to-body="true"><i
+                                        class="margin-left-sm icon icon-information font-Size-13">
+                                    </i></span>
+                                <div class="cs-select">
+                                    <ui-select name="select_playbooks" id="select_playbooks"
+                                        data-ng-click="playbookButton()"
+                                        data-ng-model="config.selectedExecutionWizardPlaybooks" data-ng-required="true"
+                                        multiple class="custom-multi-select" append-to-body="false"
+                                        required="config.selectedExecutionWizardPlaybooks.length === 0">
+                                        <ui-select-match placeholder="Choose Playbooks...">{{$item.name}}
+                                        </ui-select-match>
+                                        <ui-select-choices
+                                            repeat="playbook in playbookList | filter: $select.search | orderBy: 'name'"
+                                            refresh-delay="200" ng-show="$select.items.length >= 0 || ">
+                                            <div ng-bind-html="playbook.name | highlight: $select.search"></div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="form-group margin-top-27"
+                                data-ng-class="{ 'has-error': editJsonToGridForm.widgetName.$invalid && editJsonToGridForm.widgetName.$touched }">
+                                <uib-accordion>
+                                    <div uib-accordion-group class="panel-default">
+                                        <uib-accordion-heading>
+                                            <div class="" ng-click="toggleAdvancedSettings()"
+                                                data-ng-class="{'queue-text-active-color': toggle}">
+                                                <div class="margin-right-lg pull-left"><span
+                                                        class="queue-card-actions">&nbsp;<i
+                                                            class="fa {{ toggle ? 'fa-chevron-down' : 'fa-chevron-right'}}"></i></span>
+                                                </div>
+                                                <div class="pull-left queue-card-header-text margin-right-3">Advanced
+                                                    Settings
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        </uib-accordion-heading>
+                                        <label for="widgetName" class="control-label">Widget Name</label>
+                                        <input id="widgetName" name="widgetName" type="text" class="form-control"
+                                            data-ng-model="config.widgetName" required>
+                                    </div>
+                                </uib-accordion>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -151,5 +268,4 @@
         <button id="edit-widget-cancel" type="button" class="btn btn-sm btn-default" data-ng-click="cancel()"><i
                 class="icon icon-close margin-right-sm"></i>Close</button>
     </div>
-
 </form>
