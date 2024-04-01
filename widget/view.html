@@ -1,3 +1,7 @@
+<!-- Copyright start
+  MIT License
+  Copyright (c) 2024 Fortinet Inc
+  Copyright end -->
 <div class="widget widget-container chart">
     <div class="display-flex-space-between margin-chart">
         <div class="padding-right-0 padding-left-0 widget-dashboard-title-width"
@@ -21,7 +25,7 @@
                 <cs-spinner class="state-wait" data-show-background="true"></cs-spinner>
                 <div class="text-center padding-top-18px">Fetching Grid Data ...</div>
             </div>
-            <div class="grid-widget-container" data-ng-class="{'no-pointer-events':refreshProcessing}" data-cs-grid
+            <div data-paged-collection="gridPagedCollection" class="grid-widget-container" data-ng-class="{'no-pointer-events':refreshProcessing}" data-cs-grid
                 data-grid-options="gridOptions" data-column-defs="columnDefs"></div>
             <div class="muted-50 font-size-14 text-center padding-top-md"
                 data-ng-if="!loadProcessing && !refreshProcessing && gridOptions.data.length === 0">No Results Found
