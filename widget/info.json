@@ -19,7 +19,7 @@
         "publisher": "Fortinet",
         "help_online": "https:\/\/github.com\/fortinet-fortisoar\/widget-json-to-grid\/blob\/release\/1.2.0\/README.md",
         "compatibility": [
-            "7.3.0"
+            "8.0.0"
         ]
     }
 }
