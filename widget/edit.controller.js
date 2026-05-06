@@ -6,11 +6,11 @@
 (function () {
     angular
         .module('cybersponse')
-        .controller('editJsonToGrid110Ctrl', editJsonToGrid110Ctrl);
+        .controller('editJsonToGrid120Ctrl', editJsonToGrid120Ctrl);
 
-    editJsonToGrid110Ctrl.$inject = ['$scope', '$resource', 'API', '$uibModalInstance', 'config', 'Field', '$filter', '_'];
+    editJsonToGrid120Ctrl.$inject = ['$scope', '$resource', 'API', '$uibModalInstance', 'config', 'Field', '$filter', '_'];
 
-    function editJsonToGrid110Ctrl($scope, $resource, API, $uibModalInstance, config, Field, $filter, _) {
+    function editJsonToGrid120Ctrl($scope, $resource, API, $uibModalInstance, config, Field, $filter, _) {
         $scope.cancel = cancel;
         $scope.save = save;
         $scope.config = config;
