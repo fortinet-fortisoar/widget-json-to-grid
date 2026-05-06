@@ -6,11 +6,11 @@
 (function () {
   angular
     .module('cybersponse')
-    .controller('jsonToGrid110Ctrl', jsonToGrid110Ctrl);
+    .controller('jsonToGrid120Ctrl', jsonToGrid120Ctrl);
 
-  jsonToGrid110Ctrl.$inject = ['$scope', '$resource', 'API', 'playbookService', '$q', 'toaster', 'Entity', '$filter', 'Modules', '_', 'exportService', 'currentPermissionsService', 'FIXED_MODULE', 'statusCodeService', '$uibModal', 'widgetService', 'PagedCollection', 'widgetBasePath'];
+  jsonToGrid120Ctrl.$inject = ['$scope', '$resource', 'API', 'playbookService', '$q', 'toaster', 'Entity', '$filter', 'Modules', '_', 'exportService', 'currentPermissionsService', 'FIXED_MODULE', 'statusCodeService', '$uibModal', 'widgetService', 'PagedCollection', 'widgetBasePath'];
 
-  function jsonToGrid110Ctrl($scope, $resource, API, playbookService, $q, toaster, Entity, $filter, Modules, _, exportService, currentPermissionsService, FIXED_MODULE, statusCodeService, $uibModal, widgetService, PagedCollection, widgetBasePath) {
+  function jsonToGrid120Ctrl($scope, $resource, API, playbookService, $q, toaster, Entity, $filter, Modules, _, exportService, currentPermissionsService, FIXED_MODULE, statusCodeService, $uibModal, widgetService, PagedCollection, widgetBasePath) {
     $scope.executeGridPlaybook = executeGridPlaybook;
     $scope.refreshGridData = refreshGridData;
     $scope.widgetBasePath = widgetBasePath;
